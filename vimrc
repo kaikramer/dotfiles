@@ -100,17 +100,17 @@ map <F11> :make<CR>
 
 autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
+" make yank/paste use the global system clipboard
 set clipboard=unnamed
+
 let mapleader=","
 set history=500
 set undolevels=500
 set ttimeoutlen=50
 
 " jump to the last position when reopening a file
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal g'\"" | endif
-endif
 
 """""""""""""""""""""""""""""""
 " airline
