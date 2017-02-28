@@ -11,24 +11,10 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " Keep Plugin commands between vundle#begin/end.
-" airline
 Plugin 'bling/vim-airline'
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-Plugin 'L9'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" ctrlp
 Plugin 'kien/ctrlp.vim'
-" syntastic
 Plugin 'scrooloose/syntastic'
-" colorschemes
 Plugin 'tomasr/molokai'
-Plugin 'wombat256.vim'
-Plugin 'desert256.vim'
-Plugin 'twilight256.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -36,13 +22,6 @@ filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
-" Brief help
-" :PluginList          - list configured plugins
-" :PluginInstall(!)    - install (update) plugins
-" :PluginSearch(!) foo - search (or refresh cache first) for foo
-" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
-"
-" see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
 set ttytype=xterm-256color
@@ -165,5 +144,16 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_show_hidden = 1
+" When invoked, unless a starting directory is specified, CtrlP will set its
+" local working directory according to this variable: 
+" 'c' - the directory of the current file.
+" 'r' - the nearest ancestor that contains one of these directories or files:
+" .git .hg .svn .bzr _darcs, and your own root markers defined with the
+" g:ctrlp_root_markers option.
+" 'a' - like 'c', but only applies when the current working directory outside
+" of CtrlP isn't a direct ancestor of the directory of the current file.
+" 0 or '' (empty string) - disable this feature. 
+let g:ctrlp_working_path_mode = 'ra'
 
 
