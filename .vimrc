@@ -15,6 +15,7 @@ Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
 Plugin 'tomasr/molokai'
 
 " All of your Plugins must be added before the following line
@@ -163,3 +164,4 @@ let g:ctrlp_show_hidden = 1
 " 0 or '' (empty string) - disable this feature. 
 let g:ctrlp_working_path_mode = 'ra'
 
+map <F2> :NERDTreeToggle<CR>
