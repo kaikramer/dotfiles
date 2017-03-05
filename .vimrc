@@ -62,8 +62,6 @@ filetype indent on
 set backspace=indent,eol,start
 set ruler
 set showcmd
-map <C-b> :bp<cr>
-map <C-n> :bn<cr>
 syntax on
 set foldmethod=indent
 set foldnestmax=3
@@ -88,6 +86,11 @@ set history=500
 set undolevels=500
 set ttimeoutlen=50
 
+nmap <C-b> :bp<cr>
+nmap <C-n> :bn<cr>
+nmap <C-t> :enew<cr>
+nmap <C-w> :bp <BAR> bd #<CR>
+
 " jump to the last position when reopening a file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal g'\"" | endif
@@ -106,7 +109,10 @@ let g:airline_exclude_preview = 0
 let g:airline_theme             = 'powerlineish'
 let g:airline_enable_branch     = 1
 let g:airline_enable_syntastic  = 1
+" Enable the list of buffers
 let g:airline#extensions#tabline#enabled = 1
+" Show just the filename
+"let g:airline#extensions#tabline#fnamemod = ':t'
 " (mode, paste, iminsert)
 "let g:airline_section_a
 " (hunks, branch)
@@ -156,5 +162,4 @@ let g:ctrlp_show_hidden = 1
 " of CtrlP isn't a direct ancestor of the directory of the current file.
 " 0 or '' (empty string) - disable this feature. 
 let g:ctrlp_working_path_mode = 'ra'
-
 
