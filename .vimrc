@@ -89,8 +89,8 @@ set ttimeoutlen=50
 
 nmap <C-b> :bp<cr>
 nmap <C-n> :bn<cr>
-nmap <C-t> :enew<cr>
-nmap <C-w> :bp <BAR> bd #<CR>
+nmap <leader>bn :enew<cr>
+nmap <leader>bc :bp <BAR> bd #<cr>
 
 " jump to the last position when reopening a file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
