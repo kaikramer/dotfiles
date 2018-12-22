@@ -4,8 +4,6 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
@@ -17,6 +15,8 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tomasr/molokai'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -26,6 +26,8 @@ filetype plugin indent on    " required
 "
 " Put your non-Plugin stuff after this line
 
+" colors
+syntax on
 set ttytype=xterm-256color
 set t_Co=256
 colorscheme molokai
@@ -39,43 +41,55 @@ if has("statusline")
   set statusline=\ %F%m%r%h%w\ \ %y\ [%{&ff}]\ %{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}\ Tabstop:\ %{&ts}\ \ Shiftwidth:\ %{&shiftwidth}%=\ Line:\ %l/%L\ \ C
 endif
 
-set fencs=utf-8,latin1
-set digraph ek hidden sc vb
-set showmode
-set ignorecase
-set noerrorbells
-set noexpandtab
-set nostartofline
-set nowrap
-set textwidth=0
-set wildmenu
-set formatoptions=cqrt
-set shortmess=atToO
-set whichwrap=<,>,h,l
+set fencs=utf-8,latin1          " auto detection of file encoding
+set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc> 
+set visualbell                  " flash screen, no beeping
+set t_vb=                       " no flash
+set noerrorbells                " don't ring bell for error messages
+set nojoinspaces                " insert only one space after sentences when joining lines
+set whichwrap=<,>,h,l,b         " allow specified keys that move the cursor left/right to move to the previous/next line
+set backspace=indent,eol,start  " backspace deletes like most programs
+map <BS> X                      " make backspace delete the character in front of the cursor
+set ruler                       " show the cursor position all the time
+set autowrite                   " automatically :write before running commands
+set showcmd                     " display incomplete commands
+set showmode                    " if in Insert, Replace or Visual mode put a message on the last line
+set nostartofline               " don't goto start of line with some commands
+set nowrap                      " don't wrap long lines
+set textwidth=0                 " no max line width
+set wildmenu                    " enhanced command-line completion
+set formatoptions=cqrt          " format options: c = auto-wrap comments, q = allow formatting comments with gq, r = auto-insert comment leader, t = auto-wrap text
+set shortmess=atToO             " no shortening of messages
 set comments=b:#,:%,fb:-,n:>,n:),sl:/**,mb:\ *,elx:\ */
 set viminfo=%,'50,\"100,:100,n~/.viminfo
-set t_vb=
-set hls
+
+" line numbers
+"set relativenumber
+set number
+set numberwidth=5
+
+" searching
+set hlsearch
 set incsearch
-map <BS> X
-filetype plugin on
-filetype indent on
-set backspace=indent,eol,start
-set ruler
-set showcmd
-syntax on
+set ignorecase
+
+" folding
 set foldmethod=indent
 set foldnestmax=3
 set nofoldenable
 set foldlevel=1
 nnoremap <tab> za
-set nolist
-set listchars=tab:>.,trail:~
+
+" show white space?
+set list
+set listchars=tab:».,trail:.
+
+" tabs
+set expandtab                   " use the appropriate number of spaces to insert a tab (Ctrl-V<tab> inserts real tab)
+set smarttab                    " smart tab and backspace
+set shiftround                  " round indent to multiple of 'shiftwidth'
 set tabstop=4
 set shiftwidth=4
-cmap w!! w !sudo tee % >/dev/null  " w!! let's you sudo after file was opened!
-set autowrite
-map <F11> :make<CR>
 
 autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
@@ -83,14 +97,19 @@ autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set clipboard=unnamed
 
 let mapleader=","
-set history=500
-set undolevels=500
+
+set history=100
+set undolevels=200
 set ttimeoutlen=50
 
 nmap <C-b> :bp<cr>
 nmap <C-n> :bn<cr>
 nmap <leader>bn :enew<cr>
 nmap <leader>bc :bp <BAR> bd #<cr>
+
+map <F2> :NERDTreeToggle<CR>
+map <F11> :make<CR>
+cmap w!! w !sudo tee % >/dev/null  " w!! let's you sudo after file was opened!
 
 " jump to the last position when reopening a file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
@@ -164,4 +183,20 @@ let g:ctrlp_show_hidden = 1
 " 0 or '' (empty string) - disable this feature. 
 let g:ctrlp_working_path_mode = 'ra'
 
-map <F2> :NERDTreeToggle<CR>
+
+" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag --literal --files-with-matches --nocolor --hidden -g "" %s'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+
+  if !exists(":Ag")
+    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+    nnoremap \ :Ag<SPACE>
+  endif
+endif
