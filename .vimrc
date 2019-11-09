@@ -1,30 +1,14 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-
-" Keep Plugin commands between vundle#begin/end.
-Plugin 'bling/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tomasr/molokai'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Put your non-Plugin stuff after this line
+" vim-plug
+call plug#begin('~/.vim/plugged')
+Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'kien/ctrlp.vim'
+Plug 'scrooloose/syntastic'
+Plug 'scrooloose/nerdtree'
+Plug 'tomasr/molokai'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+call plug#end()
 
 " colors
 syntax on
