@@ -45,8 +45,6 @@ set t_vb=                       " no flash
 set noerrorbells                " don't ring bell for error messages
 set nojoinspaces                " insert only one space after sentences when joining lines
 set whichwrap=<,>,h,l,b         " allow specified keys that move the cursor left/right to move to the previous/next line
-set backspace=indent,eol,start  " backspace deletes like most programs
-map <BS> X                      " make backspace delete the character in front of the cursor
 set ruler                       " show the cursor position all the time
 set autowrite                   " automatically :write before running commands
 set showcmd                     " display incomplete commands
@@ -59,6 +57,10 @@ set formatoptions=cqrt          " format options: c = auto-wrap comments, q = al
 set shortmess=atToO             " no shortening of messages
 set comments=b:#,:%,fb:-,n:>,n:),sl:/**,mb:\ *,elx:\ */
 set viminfo=%,'50,\"100,:100,n~/.viminfo
+
+" make backspace behave as in most other programs
+set backspace=indent,eol,start
+nnoremap <BS> X
 
 " line numbers
 "set relativenumber
