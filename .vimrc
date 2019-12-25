@@ -1,23 +1,36 @@
 " vim-plug
 call plug#begin('~/.vim/plugged')
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'kien/ctrlp.vim'
 Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree'
 Plug 'tomasr/molokai'
+Plug 'morhetz/gruvbox'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " colors
 syntax on
 set ttytype=xterm-256color
 set t_Co=256
-colorscheme molokai
+colorscheme onehalfdark
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+let g:gruvbox_contrast_dark='hard'
 set background=dark
-let g:rehash256 = 1
+let g:rehash256=1
 highlight DiffText cterm=none ctermfg=black ctermbg=Red
+
+" workaround for compatibility problem with Windows Terminal, see https://github.com/microsoft/terminal/issues/832
+set t_ut=""
 
 hi StatusLine term=reverse  cterm=reverse  gui=reverse
 set ls=2 " Always show status line
@@ -26,7 +39,7 @@ if has("statusline")
 endif
 
 set fencs=utf-8,latin1          " auto detection of file encoding
-set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc> 
+set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc>
 set visualbell                  " flash screen, no beeping
 set t_vb=                       " no flash
 set noerrorbells                " don't ring bell for error messages
@@ -88,8 +101,6 @@ set ttimeoutlen=50
 
 nmap <C-b> :bp<cr>
 nmap <C-n> :bn<cr>
-nmap <leader>bn :enew<cr>
-nmap <leader>bc :bp <BAR> bd #<cr>
 
 map <F2> :NERDTreeToggle<CR>
 map <F11> :make<CR>
@@ -110,7 +121,8 @@ let g:airline_inactive_collapse=1
 " defines whether the preview window should be excluded from have its window statusline modified
 " (may help with plugins which use the preview window heavily)
 let g:airline_exclude_preview = 0
-let g:airline_theme             = 'powerlineish'
+let g:airline_theme             = 'onehalfdark'
+"let g:airline_theme             = 'powerlineish'
 let g:airline_enable_branch     = 1
 let g:airline_enable_syntastic  = 1
 " Enable the list of buffers
@@ -138,49 +150,77 @@ let g:airline_powerline_fonts=1
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = 'RO'
-let g:airline_symbols.linenr = 'LN'
-let g:airline#extensions#tabline#left_sep = ''
-let g:airline#extensions#tabline#left_alt_sep = '|'
+"let g:airline_left_sep = ''
+"let g:airline_left_alt_sep = ''
+"let g:airline_right_sep = ''
+"let g:airline_right_alt_sep = ''
+"let g:airline_symbols.branch = ''
+"let g:airline_symbols.readonly = 'RO'
+"let g:airline_symbols.linenr = 'LN'
+"let g:airline#extensions#tabline#left_sep = ''
+"let g:airline#extensions#tabline#left_alt_sep = '|'
 
 """""""""""""""""""""""""""""""
-" ctrlp
+" fzf
 """""""""""""""""""""""""""""""
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_show_hidden = 1
-" When invoked, unless a starting directory is specified, CtrlP will set its
-" local working directory according to this variable: 
-" 'c' - the directory of the current file.
-" 'r' - the nearest ancestor that contains one of these directories or files:
-" .git .hg .svn .bzr _darcs, and your own root markers defined with the
-" g:ctrlp_root_markers option.
-" 'a' - like 'c', but only applies when the current working directory outside
-" of CtrlP isn't a direct ancestor of the directory of the current file.
-" 0 or '' (empty string) - disable this feature. 
-let g:ctrlp_working_path_mode = 'ra'
 
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
+"let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
+"let $FZF_DEFAULT_OPTS="--preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (bat --style=numbers --color=always {} || highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null'"
+"let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
 
-" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-if executable('ag')
-  " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor
+" Launch fzf with CTRL+P.
+nnoremap <silent> <C-p> :FZF -m<CR>
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag --literal --files-with-matches --nocolor --hidden -g "" %s'
+" Map a few common things to do with FZF.
+nnoremap <silent> <Leader>r :Rg<CR>
+nnoremap <silent> <Leader>b :Buffers<CR>
+nnoremap <silent> <Leader>l :Lines<CR>
+nnoremap <silent> <Leader>c :Commits<CR>
+nnoremap <silent> <Leader>o :Colors<CR>
 
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
 
-  if !exists(":Ag")
-    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<SPACE>
-  endif
-endif
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~40%' }
+
+" You can set up fzf window using a Vim command (Neovim or latest Vim 8 required)
+"let g:fzf_layout = { 'window': 'enew' }
+"let g:fzf_layout = { 'window': '-tabnew' }
+"let g:fzf_layout = { 'window': '10new' }
+
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Enable per-command history
+" - History files will be stored in the specified directory
+" - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
+"   'previous-history' instead of 'down' and 'up'.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
