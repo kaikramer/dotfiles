@@ -32,15 +32,22 @@ set -g theme_show_exit_status yes
 set -g theme_display_jobs_verbose yes
 set -g default_user your_normal_user
 set -g theme_color_scheme base16
-set -g fish_prompt_pwd_dir_length 0
+set -g fish_prompt_pwd_dir_length 1
 set -g theme_project_dir_length 1
 set -g theme_newline_cursor no
 set -g theme_newline_prompt '$ '
 
-#if status is-interactive
-#and not set -q TMUX
-#    exec tmux
-#end
+# SSH: set tmux pane title to hostname
+function ssh
+  set ps_res (ps -p (ps -p %self -o ppid= | xargs) -o comm=)
+  if string match -q "tmux*" "$ps_res"
+    tmux rename-window (echo $argv | cut -d . -f 1)
+    command ssh "$argv"
+    tmux set-window-option automatic-rename "on" 1>/dev/null
+  else
+    command ssh "$argv"
+  end
+end
 
 # workaround for https://github.com/fish-shell/fish-shell/issues/1569
 function x86

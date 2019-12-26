@@ -1,13 +1,18 @@
 " vim-plug
 call plug#begin('~/.vim/plugged')
-Plug 'scrooloose/syntastic'
+Plug 'dense-analysis/ale'
+Plug 'sbdchd/neoformat'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
 Plug 'tomasr/molokai'
 Plug 'morhetz/gruvbox'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
+Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'bling/vim-airline'
@@ -97,10 +102,24 @@ set clipboard=unnamed
 
 let mapleader=","
 
-set history=100
-set undolevels=200
 set ttimeoutlen=50
+set history=100
 
+" undo
+set undolevels=1000             " How many undos
+set undoreload=10000            " number of lines to save for undo
+let vimDir = '$HOME/.vim'       " Put plugins and dictionaries in this dir (also on Windows)
+let &runtimepath.=','.vimDir
+if has('persistent_undo')       " create undo dir if it does not exist
+    let myUndoDir = expand(vimDir . '/undo')
+    call system('mkdir ' . vimDir)
+    call system('mkdir ' . myUndoDir)
+    let &undodir = myUndoDir
+    set undofile                    " Save undos after file closes
+    set undodir=$HOME/.vim/undo     " where to save undo histories
+endif
+
+" shortcuts for switching between buffers
 nmap <C-b> :bp<cr>
 nmap <C-n> :bn<cr>
 
@@ -226,3 +245,20 @@ let g:fzf_colors =
 " - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
 "   'previous-history' instead of 'down' and 'up'.
 let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+
+"""""""""""""""""""""""""""""""
+" ale
+"""""""""""""""""""""""""""""""
+
+" Fix files with prettier
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'],
+            \       'javascript': ['prettier'],
+            \       'html': ['prettier']
+            \}
+
+"""""""""""""""""""""""""""""""
+" Neoformat
+"""""""""""""""""""""""""""""""
+
+nmap <Leader>p :Neoformat<CR>
