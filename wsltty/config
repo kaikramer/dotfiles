@@ -1,0 +1,16 @@
+# To use common configuration in %APPDATA%\mintty, simply remove this file
+ThemeFile=onehalfdark
+ClipShortcuts=no
+WindowShortcuts=no
+SwitchShortcuts=no
+AltFnShortcuts=no
+ScrollbackLines=50000
+ScrollMod=off
+BellType=0
+Font=RobotoMono NF
+FontHeight=13
+FontWeight=500
+FontSmoothing=default
+BoldAsFont=no
+BoldAsColour=yes
+ClicksTargetApp=no

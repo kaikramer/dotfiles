@@ -1,11 +1,14 @@
+alias vi='nvim'
+
+set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --glob "!.git/*"'
 
 set -g theme_display_git yes
 set -g theme_display_git_dirty yes
-set -g theme_display_git_untracked yes
-set -g theme_display_git_ahead_verbose yes
-set -g theme_display_git_dirty_verbose yes
-set -g theme_display_git_stashed_verbose yes
-set -g theme_display_git_master_branch yes
+set -g theme_display_git_untracked no
+set -g theme_display_git_ahead_verbose no
+set -g theme_display_git_dirty_verbose no
+set -g theme_display_git_stashed_verbose no
+set -g theme_display_git_master_branch no
 set -g theme_git_worktree_support no # buggy
 set -g theme_use_abbreviated_branch_name yes
 set -g theme_display_vagrant no
@@ -18,7 +21,7 @@ set -g theme_display_nvm yes
 set -g theme_display_user ssh
 set -g theme_display_hostname ssh
 set -g theme_display_vi no
-set -g theme_display_date no
+set -g theme_display_date yes
 set -g theme_display_cmd_duration yes
 set -g theme_title_display_process yes
 set -g theme_title_display_path no
@@ -30,7 +33,7 @@ set -g theme_powerline_fonts no
 set -g theme_nerd_fonts yes
 set -g theme_show_exit_status yes
 set -g theme_display_jobs_verbose yes
-set -g default_user your_normal_user
+set -g default_user kk
 set -g theme_color_scheme base16
 set -g fish_prompt_pwd_dir_length 1
 set -g theme_project_dir_length 1
@@ -56,3 +59,5 @@ end
 function X86
     echo '(X86)'
 end
+
+set -U fish_user_paths ~/.npm-global/bin $fish_user_paths
