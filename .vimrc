@@ -20,7 +20,7 @@ Plug 'tomasr/molokai'
 Plug 'gruvbox-community/gruvbox'
 Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
-Plug 'flrnd/plastic.vim'
+Plug 'chriskempson/base16-vim'
 call plug#end()
 
 " colors
@@ -220,15 +220,15 @@ nnoremap <silent> <Leader>c :Commits<CR>
 nnoremap <silent> <Leader>o :Colors<CR>
 
 " Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
+nnoremap <leader><tab> <plug>(fzf-maps-n)
+xnoremap <leader><tab> <plug>(fzf-maps-x)
+onoremap <leader><tab> <plug>(fzf-maps-o)
 
 " Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
+inoremap <c-x><c-k> <plug>(fzf-complete-word)
+inoremap <c-x><c-f> <plug>(fzf-complete-path)
+"imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+inoremap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Advanced customization using Vim function
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
