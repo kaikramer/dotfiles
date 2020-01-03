@@ -61,3 +61,8 @@ function X86
 end
 
 set -U fish_user_paths ~/.npm-global/bin $fish_user_paths
+set -U fish_user_paths ~/.cargo/bin $fish_user_paths
+
+if test -e .config/fish/proxy.sh
+    source .config/fish/proxy.sh
+end
