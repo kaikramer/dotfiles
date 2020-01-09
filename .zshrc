@@ -93,7 +93,7 @@ export EDITOR='nvim'
 
 alias la='ls -la'
 alias vi=nvim
-alias ssh='TERM=xterm-256color ssh'
+#alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function below
 
 ### set colors for LS_COLORS
 #eval `dircolors ~/.dircolors`
@@ -109,6 +109,18 @@ if [[ -r ~/.ssh/config ]]; then
     zstyle ':completion:*:(ssh|scp):*' hosts $h
 fi
 
+# rename tmux window with ssh host
+ssh() {
+    if env | grep -q "TMUX_PANE"; then
+        tmux rename-window "$*"
+        TERM=xterm-256color command ssh "$@"
+        tmux set-window-option automatic-rename "on" 1>/dev/null
+    else
+        TERM=xterm-256color command ssh "$@"
+    fi
+}
+
+
 # Allow for autocomplete to be case insensitive
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
 
@@ -118,5 +130,6 @@ autoload -Uz compinit && compinit -i
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[ -f ~/.work ] && source ~/.work
