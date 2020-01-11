@@ -95,9 +95,6 @@ alias la='ls -la'
 alias vi=nvim
 #alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function below
 
-### set colors for LS_COLORS
-#eval `dircolors ~/.dircolors`
-
 # Highlight the current autocomplete option
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
@@ -130,6 +127,8 @@ autoload -Uz compinit && compinit -i
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ ! -f ~/.dircolors ]] || eval `dircolors ~/.dircolors`
 
-[ -f ~/.work ] && source ~/.work
+[[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
+
+[[ ! -f ~/.work ]] || source ~/.work
