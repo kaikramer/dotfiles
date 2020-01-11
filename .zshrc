@@ -95,6 +95,9 @@ alias la='ls -la'
 alias vi=nvim
 #alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function below
 
+# Use Linux colors for ls on macOS
+export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+
 # Highlight the current autocomplete option
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
