@@ -15,6 +15,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'sheerun/vim-polyglot'
 " color schemes:
 Plug 'tomasr/molokai'
 Plug 'gruvbox-community/gruvbox'
@@ -406,8 +407,8 @@ omap af <Plug>(coc-funcobj-a)
 "xmap <silent> <C-d> <Plug>(coc-range-select)
 
 " Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-"nmap <Leader>p :Format<CR>
+command! -nargs=0 CocFormat :call CocAction('format')
+nmap <Leader>f :CocFormat<CR>
 
 " Remap for format selected region
 "xmap <leader>p  <Plug>(coc-format-selected)
