@@ -77,7 +77,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(git oc zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -93,6 +93,14 @@ export EDITOR='nvim'
 
 alias la='ls -la'
 alias vi=nvim
+
+alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
+alias sp='openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
+alias sl='openssl crl -noout -text -inform DER -in '
+alias p12='openssl pkcs12 -in '
+alias p10='openssl req -noout -text -in '
+alias b64='openssl enc -d -base64 -in '
+
 #alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function below
 
 # Use Linux colors for ls on macOS
@@ -126,6 +134,9 @@ zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower
 
 # Initialize the autocompletion
 autoload -Uz compinit && compinit -i
+
+# include hidden files for CTRL-T command
+export FZF_CTRL_T_COMMAND="find . -type f -not -path '*/\.git/*'"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
