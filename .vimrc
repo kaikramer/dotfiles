@@ -9,13 +9,14 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
-Plug 'svermeulen/vim-easyclip'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'sheerun/vim-polyglot'
+Plug 'airblade/vim-rooter'
+Plug 'pearofducks/ansible-vim'
 " color schemes:
 Plug 'tomasr/molokai'
 Plug 'gruvbox-community/gruvbox'
@@ -75,7 +76,6 @@ endif
 
 " make backspace behave as in most other programs
 set backspace=indent,eol,start
-nnoremap <BS> X
 
 " line numbers
 "set relativenumber
@@ -106,9 +106,6 @@ set tabstop=4
 set shiftwidth=4
 
 autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-
-" make yank/paste use the global system clipboard
-set clipboard=unnamed
 
 let mapleader=","
 
@@ -150,6 +147,22 @@ cmap w!! w !sudo tee % >/dev/null  " w!! let's you sudo after file was opened!
 " jump to the last position when reopening a file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal g'\"" | endif
+
+" make yank/paste use the global system clipboard
+set clipboard=unnamed
+
+" make 'd' only delete (not yank), and 'leader d' cut (see https://github.com/pazams/d-is-for-delete)
+nnoremap x "_x
+nnoremap X "_X
+nnoremap d "_d
+nnoremap D "_D
+vnoremap d "_d
+nnoremap <BS> "_X
+nnoremap <Del> "_x
+nnoremap <leader>d "*d
+nnoremap <leader>D "*D
+vnoremap <leader>d "*d
+
 
 """""""""""""""""""""""""""""""
 " airline
@@ -200,6 +213,13 @@ endif
 "let g:airline_symbols.linenr = 'LN'
 "let g:airline#extensions#tabline#left_sep = ''
 "let g:airline#extensions#tabline#left_alt_sep = '|'
+
+
+"""""""""""""""""""""""""""""""
+" auto-pairs
+"""""""""""""""""""""""""""""""
+let g:AutoPairsMapBS=0  " do not delete in pairs
+
 
 """""""""""""""""""""""""""""""
 " fzf
@@ -439,29 +459,6 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
-
-"""""""""""""""""""""""""""""""
-" easyclip
-"""""""""""""""""""""""""""""""
-
-let g:EasyClipAutoFormat=0
-let g:EasyClipYankHistorySize=50
-let g:EasyClipCopyExplicitRegisterToDefault=0
-let g:EasyClipAlwaysMoveCursorToEndOfPaste=0
-let g:EasyClipPreserveCursorPositionAfterYank=0
-let g:EasyClipShowYanksWidth=80
-
-let g:EasyClipShareYanks=0                      " write yanks into file so they can be shared between vim instances
-let g:EasyClipShareYanksFile=".easyclip"
-let g:EasyClipShareYanksDirectory="$HOME"
-
-let g:EasyClipUseYankDefaults=1
-let g:EasyClipUseCutDefaults=1
-let g:EasyClipUsePasteDefaults=1
-let g:EasyClipEnableBlackHoleRedirect=1
-let g:EasyClipUsePasteToggleDefaults=0          " disable bindings <CTRL-N> and <CTRL-P>
-let g:EasyClipUseSubstituteDefaults=0
 
 
 """""""""""""""""""""""""""""""
