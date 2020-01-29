@@ -10,6 +10,8 @@ fi
 
 set -o magicequalsubst
 
+[[ ! -f /etc/profile ]] || source /etc/profile
+
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
@@ -77,7 +79,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git oc zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(git vagrant oc zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
