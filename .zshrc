@@ -87,6 +87,12 @@ source $ZSH/oh-my-zsh.sh
 
 PATH=$PATH:~/bin
 
+# Avoid spamming history with duplicate entries 
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+
 # zsh-history-substring-search
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
