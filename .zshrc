@@ -79,7 +79,15 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vagrant oc zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(
+    git
+    vagrant
+    oc
+    fzf-marks
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    zsh-history-substring-search
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,7 +95,10 @@ source $ZSH/oh-my-zsh.sh
 
 PATH=$PATH:~/bin
 
-# Avoid spamming history with duplicate entries 
+export FZF_MARKS_COLOR_LHS=32
+export FZF_MARKS_COLOR_RHS=34
+
+# Avoid spamming history with duplicate entries
 setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
