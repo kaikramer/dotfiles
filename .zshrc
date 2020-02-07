@@ -1,3 +1,5 @@
+#zmodload zsh/zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
@@ -147,15 +149,34 @@ ssh() {
     fi
 }
 
+# bind ssh completion to Ctrl-S
+start_ssh_completion () { LBUFFER="ssh **" ; fzf-completion }
+zle -N start_ssh_completion
+bindkey '^s' start_ssh_completion
+
+# Workaround for "nice(5) failed", see https://github.com/Microsoft/WSL/issues/1887
+unsetopt BG_NICE
 
 # Allow for autocomplete to be case insensitive
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
 
-# Initialize the autocompletion
-autoload -Uz compinit && compinit -i
-
 # include hidden files for CTRL-T command
 export FZF_CTRL_T_COMMAND="find . -type f -not -path '*/\.git/*'"
+
+# Let "ssh <TAB>" start completion (no "**" required)
+#export FZF_COMPLETION_TRIGGER=""
+
+# This speeds up pasting w/ autosuggest
+# https://github.com/zsh-users/zsh-autosuggestions/issues/238
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+}
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -165,3 +186,5 @@ export FZF_CTRL_T_COMMAND="find . -type f -not -path '*/\.git/*'"
 [[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
 
 [[ ! -f ~/.work ]] || source ~/.work
+
+#zprof
