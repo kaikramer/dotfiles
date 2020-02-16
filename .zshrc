@@ -166,6 +166,8 @@ export FZF_CTRL_T_COMMAND="find . -type f -not -path '*/\.git/*'"
 # Let "ssh <TAB>" start completion (no "**" required)
 #export FZF_COMPLETION_TRIGGER=""
 
+export LC_ALL="en_US.UTF-8"
+
 # This speeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
 pasteinit() {
