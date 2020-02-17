@@ -12,11 +12,6 @@ fi
 
 set -o magicequalsubst
 
-[[ ! -f /etc/profile ]] || source /etc/profile
-
-# Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
-
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -76,6 +71,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+# Path to your oh-my-zsh installation.
+export ZSH=~/.oh-my-zsh
+#
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -85,7 +83,6 @@ plugins=(
     git
     vagrant
     oc
-    fzf-marks
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-history-substring-search
@@ -183,9 +180,13 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+[[ ! -f /etc/profile ]] || source /etc/profile
+
 [[ ! -f ~/.dircolors ]] || eval `dircolors ~/.dircolors`
 
 [[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
+
+[[ ! -f ~/.oh-my-zsh/custom/plugins/fzf-marks/fzf-marks.plugin.zsh ]] || source ~/.oh-my-zsh/custom/plugins/fzf-marks/fzf-marks.plugin.zsh
 
 [[ ! -f ~/.work ]] || source ~/.work
 

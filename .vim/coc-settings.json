@@ -1,5 +1,11 @@
 {
     "prettier.printWidth": 160,
-    "prettier.useTabs": false
-
+    "prettier.useTabs": false,
+    "languageserver": {
+        "groovy": {
+            "command": "java",
+            "args" : ["-jar", "/home/kk/bin/groovy-language-server-all.jar"],
+            "filetypes": ["groovy"]
+        }
+    }
 }
