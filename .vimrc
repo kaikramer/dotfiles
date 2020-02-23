@@ -82,9 +82,10 @@ endif
 set backspace=indent,eol,start
 
 " line numbers
-"set relativenumber
+set relativenumber
 set number
 set numberwidth=5
+set cursorline
 
 " searching
 set hlsearch

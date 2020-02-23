@@ -1,5 +1,8 @@
 #zmodload zsh/zprof
 
+# disable terminal flow control in mintty -> frees Ctrl-S and Ctrl-Q shortcuts
+stty -ixon
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
@@ -7,100 +10,21 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# zinit plugin manager
+source ~/.zinit/bin/zinit.zsh
+zinit ice depth=1;                                          zinit light romkatv/powerlevel10k
+zinit ice wait lucid;                                       zinit light urbainvaes/fzf-marks
+zinit ice wait lucid blockf atpull'zinit creinstall -q .';  zinit light zsh-users/zsh-completions
+zinit ice wait lucid atinit"zpcompinit; zpcdreplay";        zinit light zsh-users/zsh-syntax-highlighting
+zinit ice wait lucid atload"_zsh_autosuggest_start";        zinit light zsh-users/zsh-autosuggestions
 
-set -o magicequalsubst
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
+[[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+[[ ! -f ~/.dircolors ]] || eval `dircolors ~/.dircolors`
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
-
-# Which plugins would you like to load?
-# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(
-    git
-    vagrant
-    oc
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-    zsh-history-substring-search
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-PATH=$PATH:~/bin
-
-export FZF_MARKS_COLOR_LHS=32
-export FZF_MARKS_COLOR_RHS=34
-
-# Avoid spamming history with duplicate entries
-setopt EXTENDED_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS
-
-# zsh-history-substring-search
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
-
-export EDITOR='nvim'
-
-alias la='ls -la'
-alias vi=nvim
-
-alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
-alias sp='openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
-alias sl='openssl crl -noout -text -inform DER -in '
-alias p12='openssl pkcs12 -in '
-alias p10='openssl req -noout -text -in '
-alias b64='openssl enc -d -base64 -in '
-
-#alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function below
-
-# Use Linux colors for ls on macOS
-export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
-
-# Highlight the current autocomplete option
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+[[ ! -f ~/.work ]] || source ~/.work
 
 # SSH/SCP autocomplete only from .ssh/config
 zstyle ':completion:*' users
@@ -125,6 +49,52 @@ ssh() {
 start_ssh_completion () { LBUFFER="ssh **" ; fzf-completion }
 zle -N start_ssh_completion
 bindkey '^s' start_ssh_completion
+
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+set -o magicequalsubst
+
+export FZF_MARKS_COLOR_LHS=32
+export FZF_MARKS_COLOR_RHS=34
+
+# Avoid spamming history with duplicate entries
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+
+export EDITOR='nvim'
+
+alias la='ls -la'
+alias ls='ls --color=auto'
+alias vi=nvim
+
+alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
+alias sp='openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
+alias sl='openssl crl -noout -text -inform DER -in '
+alias p12='openssl pkcs12 -in '
+alias p10='openssl req -noout -text -in '
+alias b64='openssl enc -d -base64 -in '
+
+alias g='git'
+alias ga='git add'
+alias gc='git commit -v'
+alias gd='git difftool'
+alias gf='git fetch'
+alias gl='git pull'
+alias glg='git log --stat'
+alias glo='git log --oneline --decorate'
+alias gm='git merge'
+alias gp='git push'
+alias gst='git status'
+
+#alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function above
+
+# Use Linux colors for ls on macOS
+export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+
+# Highlight the current autocomplete option
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Workaround for "nice(5) failed", see https://github.com/Microsoft/WSL/issues/1887
 unsetopt BG_NICE
@@ -151,16 +121,5 @@ pastefinish() {
 }
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[[ ! -f ~/.dircolors ]] || eval `dircolors ~/.dircolors`
-
-[[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
-
-[[ ! -f ~/.oh-my-zsh/custom/plugins/fzf-marks/fzf-marks.plugin.zsh ]] || source ~/.oh-my-zsh/custom/plugins/fzf-marks/fzf-marks.plugin.zsh
-
-[[ ! -f ~/.work ]] || source ~/.work
 
 #zprof
