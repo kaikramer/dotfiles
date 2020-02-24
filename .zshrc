@@ -10,13 +10,31 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Optimize slow compinit by only calling it once per day (see https://gist.github.com/ctechols/ca1035271ad134841284#gistcomment-2894219)
+_zpcompinit_custom() {
+  setopt extendedglob local_options
+  autoload -Uz compinit
+  local zcd=${ZDOTDIR:-$HOME}/.zcompdump
+  local zcdc="$zcd.zwc"
+  # Compile the completion dump to increase startup speed, if dump is newer or doesn't exist,
+  # in the background as this is doesn't affect the current session
+  if [[ -f "$zcd"(#qN.m+1) ]]; then
+        compinit -i -d "$zcd"
+        { rm -f "$zcdc" && zcompile "$zcd" } &!
+  else
+        compinit -C -d "$zcd"
+        { [[ ! -f "$zcdc" || "$zcd" -nt "$zcdc" ]] && rm -f "$zcdc" && zcompile "$zcd" } &!
+  fi
+}
+local zcd=${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+
 # zinit plugin manager
 source ~/.zinit/bin/zinit.zsh
-zinit ice depth=1;                                          zinit light romkatv/powerlevel10k
-zinit ice wait lucid;                                       zinit light urbainvaes/fzf-marks
-zinit ice wait lucid blockf atpull'zinit creinstall -q .';  zinit light zsh-users/zsh-completions
-zinit ice wait lucid atinit"zpcompinit; zpcdreplay";        zinit light zsh-users/zsh-syntax-highlighting
-zinit ice wait lucid atload"_zsh_autosuggest_start";        zinit light zsh-users/zsh-autosuggestions
+zinit ice depth=1;                                           zinit light romkatv/powerlevel10k
+zinit ice wait lucid;                                        zinit light urbainvaes/fzf-marks
+zinit ice wait lucid blockf atpull'zinit creinstall -q .';   zinit light zsh-users/zsh-completions
+zinit ice wait lucid atinit"_zpcompinit_custom; zpcdreplay"; zinit light zsh-users/zsh-syntax-highlighting
+zinit ice wait lucid atload"_zsh_autosuggest_start";         zinit light zsh-users/zsh-autosuggestions
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
