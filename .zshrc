@@ -14,7 +14,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # Optimize slow compinit by only calling it once per day (see https://gist.github.com/ctechols/ca1035271ad134841284#gistcomment-2894219)
-_zpcompinit_custom() {
+_zicompinit_custom() {
   setopt extendedglob local_options
   autoload -Uz compinit
   local zcd=${ZDOTDIR:-$HOME}/.zcompdump
@@ -33,14 +33,13 @@ local zcd=${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
 # zinit plugin manager
 source ~/.zinit/bin/zinit.zsh
-zinit ice depth=1;                                           zinit light romkatv/powerlevel10k
-zinit ice wait lucid;                                        zinit light urbainvaes/fzf-marks
-zinit ice wait lucid blockf atpull'zinit creinstall -q .';   zinit light zsh-users/zsh-completions
-zinit ice wait lucid atinit"_zpcompinit_custom; zpcdreplay"; zinit light zsh-users/zsh-syntax-highlighting
-zinit ice wait lucid atload"_zsh_autosuggest_start";         zinit light zsh-users/zsh-autosuggestions
+zinit ice lucid atload'source ~/.p10k.zsh' nocd; zinit light romkatv/powerlevel10k
+zinit ice wait lucid; zinit light urbainvaes/fzf-marks
+zinit ice wait lucid blockf atpull'zinit creinstall -q .'; zinit light zsh-users/zsh-completions
+zinit ice wait lucid atinit"ZINIT[COMPINIT_OPTS]=-C; _zicompinit_custom; zicdreplay"; zinit light zdharma/fast-syntax-highlighting
+zinit ice wait lucid atload"!_zsh_autosuggest_start"; zinit light zsh-users/zsh-autosuggestions
 
-[[ ! -f ~/.p10k.zsh ]]  || source ~/.p10k.zsh
-[[ ! -f ~/.fzf.zsh ]]   || source ~/.fzf.zsh
+[[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
 
 # SSH/SCP autocomplete only from .ssh/config
 zstyle ':completion:*' users
