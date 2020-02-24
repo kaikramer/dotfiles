@@ -3,6 +3,9 @@
 # disable terminal flow control in mintty -> frees Ctrl-S and Ctrl-Q shortcuts
 stty -ixon
 
+[[ ! -f ~/.dircolors ]] || eval `dircolors ~/.dircolors`
+[[ ! -f ~/.work ]]      || source ~/.work
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
@@ -36,13 +39,8 @@ zinit ice wait lucid blockf atpull'zinit creinstall -q .';   zinit light zsh-use
 zinit ice wait lucid atinit"_zpcompinit_custom; zpcdreplay"; zinit light zsh-users/zsh-syntax-highlighting
 zinit ice wait lucid atload"_zsh_autosuggest_start";         zinit light zsh-users/zsh-autosuggestions
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
-
-[[ ! -f ~/.dircolors ]] || eval `dircolors ~/.dircolors`
-
-[[ ! -f ~/.work ]] || source ~/.work
+[[ ! -f ~/.p10k.zsh ]]  || source ~/.p10k.zsh
+[[ ! -f ~/.fzf.zsh ]]   || source ~/.fzf.zsh
 
 # SSH/SCP autocomplete only from .ssh/config
 zstyle ':completion:*' users
@@ -72,8 +70,23 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 set -o magicequalsubst
 
+# fzf-marks
 export FZF_MARKS_COLOR_LHS=32
 export FZF_MARKS_COLOR_RHS=34
+
+# add some key bindings from oh-my-zsh
+bindkey '^[[1;5C' forward-word                        # [Ctrl-RightArrow] - move forward one word
+bindkey '^[[1;5D' backward-word                       # [Ctrl-LeftArrow] - move backward one word
+bindkey ' ' magic-space                               # [Space] - do history expansion
+if [[ "${terminfo[kcbt]}" != "" ]]; then
+  bindkey "${terminfo[kcbt]}" reverse-menu-complete   # [Shift-Tab] - move through the completion menu backwards
+fi
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
 
 # Avoid spamming history with duplicate entries
 setopt EXTENDED_HISTORY
@@ -83,6 +96,7 @@ setopt HIST_SAVE_NO_DUPS
 
 export EDITOR='nvim'
 
+# Aliases
 alias la='ls -la'
 alias ls='ls --color=auto'
 alias vi=nvim
@@ -111,14 +125,33 @@ alias gst='git status'
 # Use Linux colors for ls on macOS
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
-# Highlight the current autocomplete option
+# Completion settings
+unsetopt menu_complete   # do not autoselect the first completion entry
+unsetopt flowcontrol
+setopt auto_menu         # show completion menu on successive tab press
+setopt complete_in_word
+setopt always_to_end
+setopt no_list_ambiguous
+setopt MENU_COMPLETE
+unset CASE_SENSITIVE HYPHEN_INSENSITIVE
+zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+# disable named-directories autocompletion
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+# Use caching so that commands like apt and dpkg complete are useable
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
+# Allow for autocomplete to be case insensitive
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
 
 # Workaround for "nice(5) failed", see https://github.com/Microsoft/WSL/issues/1887
 unsetopt BG_NICE
 
-# Allow for autocomplete to be case insensitive
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
+# recognize comments
+setopt interactivecomments
 
 # include hidden files for CTRL-T command
 export FZF_CTRL_T_COMMAND="find . -type f -not -path '*/\.git/*'"
