@@ -96,8 +96,8 @@ setopt HIST_SAVE_NO_DUPS
 export EDITOR='nvim'
 
 # Aliases
+alias ls='ls --color=auto -v'
 alias la='ls -la'
-alias ls='ls --color=auto'
 alias vi=nvim
 
 alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
@@ -145,6 +145,15 @@ zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
 # Allow for autocomplete to be case insensitive
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
+# man pages
+zstyle ':completion:*:manuals'    separate-sections true
+zstyle ':completion:*:manuals.*'  insert-sections   true
+zstyle ':completion:*:man:*'      menu yes select
+
+# Force file completion with shortcut "C-x f"
+zle -C complete-file complete-word _generic
+zstyle ':completion:complete-file::::' completer _files
+bindkey '^xf' complete-file
 
 # Workaround for "nice(5) failed", see https://github.com/Microsoft/WSL/issues/1887
 unsetopt BG_NICE

@@ -4,6 +4,7 @@ Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mattn/emmet-vim'
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -471,6 +472,20 @@ let g:user_emmet_leader_key='<C-y>'
 map <F2> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
 
+" Shortcut for closing text buffer and switching to next file buffer
+nnoremap <leader>q :bp<cr>:bd #<cr>
+
+let g:NERDTreeIndicatorMapCustom = {
+                \ "Modified"  : "",
+                \ "Staged"    : "",
+                \ "Untracked" : "",
+                \ "Renamed"   : "",
+                \ "Unmerged"  : "",
+                \ "Deleted"   : "",
+                \ "Dirty"     : "",
+                \ "Clean"     : "",
+                \ "Unknown"   : ""
+                \ }
 
 """""""""""""""""""""""""""""""
 " Vista
