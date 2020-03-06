@@ -19,12 +19,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'airblade/vim-rooter'
 Plug 'pearofducks/ansible-vim'
 Plug 'liuchengxu/vista.vim'
-" color schemes:
-Plug 'tomasr/molokai'
-Plug 'gruvbox-community/gruvbox'
-Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
-Plug 'chriskempson/base16-vim'
 Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
@@ -157,16 +152,19 @@ au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
 set clipboard=unnamed
 
 " make 'd' only delete (not yank), and 'leader d' cut (see https://github.com/pazams/d-is-for-delete)
-nnoremap x "_x
 nnoremap X "_X
-nnoremap d "_d
+nnoremap x "_x
+vnoremap x "_x
 nnoremap D "_D
+nnoremap d "_d
 vnoremap d "_d
+nnoremap C "_C
+nnoremap c "_c
+vnoremap c "_c
 nnoremap <BS> "_X
 nnoremap <Del> "_x
 nnoremap <leader>d "*d
 nnoremap <leader>D "*D
-vnoremap <leader>d "*d
 
 " Indent and keep selection
 vmap < <gv
@@ -470,7 +468,15 @@ let g:user_emmet_leader_key='<C-y>'
 """""""""""""""""""""""""""""""
 
 map <F2> :NERDTreeToggle<CR>
-let NERDTreeShowHidden=1
+
+let NERDTreeShowHidden = 1
+let g:NERDTreeWinSize = 50
+
+" Make sure no files or other buffers are opened in NT buffer
+autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
+
+" Close vim if only NT window left
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Shortcut for closing text buffer and switching to next file buffer
 nnoremap <leader>q :bp<cr>:bd #<cr>
