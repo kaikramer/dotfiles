@@ -151,20 +151,24 @@ au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
 " make yank/paste use the global system clipboard
 set clipboard=unnamed
 
-" make 'd' only delete (not yank), and 'leader d' cut (see https://github.com/pazams/d-is-for-delete)
+" make 'd' only delete (not yank), and 'leader d' cut (idea from https://github.com/pazams/d-is-for-delete)
 nnoremap X "_X
 nnoremap x "_x
-vnoremap x "_x
+xnoremap x "_x
 nnoremap D "_D
 nnoremap d "_d
-vnoremap d "_d
+xnoremap d "_d
 nnoremap C "_C
 nnoremap c "_c
-vnoremap c "_c
+xnoremap c "_c
+xnoremap p "0p
+xnoremap P "0P
 nnoremap <BS> "_X
 nnoremap <Del> "_x
 nnoremap <leader>d "*d
+xnoremap <leader>d "*d
 nnoremap <leader>D "*D
+xnoremap <leader>D "*D
 
 " Indent and keep selection
 vmap < <gv
