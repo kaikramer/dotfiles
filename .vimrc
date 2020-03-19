@@ -21,6 +21,7 @@ Plug 'pearofducks/ansible-vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'ayu-theme/ayu-vim'
 call plug#end()
 
 " colors
@@ -30,7 +31,9 @@ if !has('nvim')
 endif
 set t_Co=256
 let g:nord_bold = 0
-colorscheme nord
+let ayucolor="mirage"
+"let ayucolor="dark"
+colorscheme ayu
 if (has('termguicolors'))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -178,6 +181,7 @@ vmap > >gv
 """""""""""""""""""""""""""""""
 " airline
 """""""""""""""""""""""""""""""
+"let g:airline_extensions = []
 let g:airline_detect_modified=1
 let g:airline_detect_paste=1
 let g:airline_detect_iminsert=0
@@ -186,7 +190,10 @@ let g:airline_inactive_collapse=1
 " defines whether the preview window should be excluded from have its window statusline modified
 " (may help with plugins which use the preview window heavily)
 let g:airline_exclude_preview = 0
-let g:airline_theme             = 'nord'
+"let g:airline_theme             = 'bubblegum'
+"let g:airline_theme             = 'base16'
+"let g:airline_theme             = 'minimalist'
+let g:airline_theme             = 'deus'
 "let g:airline_theme             = 'powerlineish'
 let g:airline_enable_branch     = 1
 let g:airline_enable_syntastic  = 1
@@ -195,7 +202,11 @@ let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
 "let g:airline#extensions#tabline#fnamemod = ':t'
 " (mode, paste, iminsert)
-"let g:airline_section_a
+call airline#parts#define('mode', {
+      \ 'function': 'airline#parts#mode',
+      \ 'accent': 'none',
+      \ })
+"let g:airline_section_a = airline#section#create(['mode', 'paste', 'iminsert'])
 " (hunks, branch)
 "let g:airline_section_b
 " (bufferline or filename)
@@ -203,11 +214,11 @@ let g:airline#extensions#tabline#enabled = 1
 " (readonly, csv)
 "let g:airline_section_gutter
 " (tagbar, filetype, virtualenv)
-let g:airline_section_x="%y \ ts:\ %{&ts}\ \ sw:\ %{&shiftwidth}"
+"let g:airline_section_x="%y \ ts:\ %{&ts}\ \ sw:\ %{&shiftwidth}"
 " (fileencoding, fileformat)
 "let g:airline_section_y
 " (percentage, line number, column number)
-"let g:airline_section_z
+let g:airline_section_z = '%3p%% %5l/%L :%3v'
 " (syntastic, whitespace)
 "let g:airline_section_warning
 
