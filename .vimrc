@@ -10,7 +10,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
-Plug 'jiangmiao/auto-pairs'
+Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'bling/vim-airline'
@@ -29,29 +29,16 @@ syntax on
 if !has('nvim')
     set ttytype=xterm-256color
 endif
-set t_Co=256
-let g:nord_bold = 0
-let ayucolor="mirage"
-"let ayucolor="dark"
-colorscheme ayu
 if (has('termguicolors'))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
-let g:gruvbox_contrast_dark='hard'
+set t_Co=256
+let ayucolor="mirage"
+colorscheme ayu
 set background=dark
 let g:rehash256=1
-highlight DiffText cterm=none ctermfg=black ctermbg=Red
-
-" workaround for compatibility problem with Windows Terminal, see https://github.com/microsoft/terminal/issues/832
-set t_ut=""
-
-hi StatusLine term=reverse  cterm=reverse  gui=reverse
-set ls=2 " Always show status line
-if has("statusline")
-  set statusline=\ %F%m%r%h%w\ \ %y\ [%{&ff}]\ %{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}\ Tabstop:\ %{&ts}\ \ Shiftwidth:\ %{&shiftwidth}%=\ Line:\ %l/%L\ \ C
-endif
 
 set fencs=utf-8,latin1          " auto detection of file encoding
 "set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc>
@@ -190,9 +177,6 @@ let g:airline_inactive_collapse=1
 " defines whether the preview window should be excluded from have its window statusline modified
 " (may help with plugins which use the preview window heavily)
 let g:airline_exclude_preview = 0
-"let g:airline_theme             = 'bubblegum'
-"let g:airline_theme             = 'base16'
-"let g:airline_theme             = 'minimalist'
 let g:airline_theme             = 'deus'
 "let g:airline_theme             = 'powerlineish'
 let g:airline_enable_branch     = 1
@@ -235,12 +219,6 @@ endif
 "let g:airline_symbols.linenr = 'LN'
 "let g:airline#extensions#tabline#left_sep = ''
 "let g:airline#extensions#tabline#left_alt_sep = '|'
-
-
-"""""""""""""""""""""""""""""""
-" auto-pairs
-"""""""""""""""""""""""""""""""
-let g:AutoPairsMapBS=0  " do not delete in pairs
 
 
 """""""""""""""""""""""""""""""
