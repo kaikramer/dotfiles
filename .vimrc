@@ -1,4 +1,5 @@
-" vim-plug
+scriptencoding utf-8
+
 call plug#begin('~/.vim/plugged')
 Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -13,8 +14,9 @@ Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'maximbaz/lightline-ale'
 Plug 'sheerun/vim-polyglot'
 Plug 'airblade/vim-rooter'
 Plug 'pearofducks/ansible-vim'
@@ -35,12 +37,12 @@ if (has('termguicolors'))
     set termguicolors
 endif
 set t_Co=256
-let ayucolor="mirage"
+let ayucolor='mirage'
 colorscheme ayu
 set background=dark
 let g:rehash256=1
 
-set fencs=utf-8,latin1          " auto detection of file encoding
+set fileencodings=utf-8,latin1  " auto detection of file encoding
 "set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc>
 set visualbell                  " flash screen, no beeping
 set t_vb=                       " no flash
@@ -50,15 +52,22 @@ set whichwrap=<,>,h,l,b         " allow specified keys that move the cursor left
 set ruler                       " show the cursor position all the time
 set autowrite                   " automatically :write before running commands
 set showcmd                     " display incomplete commands
-set showmode                    " if in Insert, Replace or Visual mode put a message on the last line
+set noshowmode                  " plugin lightline already does this
 set nostartofline               " don't goto start of line with some commands
 set nowrap                      " don't wrap long lines
 set textwidth=0                 " no max line width
 set wildmenu                    " enhanced command-line completion
 set formatoptions=cqrt          " format options: c = auto-wrap comments, q = allow formatting comments with gq, r = auto-insert comment leader, t = auto-wrap text
 set shortmess=atToO             " no shortening of messages
+set shortmess+=c                " don't give ins-completion-menu messages.
 set comments=b:#,:%,fb:-,n:>,n:),sl:/**,mb:\ *,elx:\ */
 set completeopt=longest,menuone " popup menu doesn't select the first completion item, but inserts the longest common text of all matches; menu will come up even if there's only one match
+set hidden                      " if hidden is not set, TextEdit might fail.
+set nobackup                    " Some LSP servers have issues with backup files, see #649
+set nowritebackup               " Some LSP servers have issues with backup files, see #649
+"set cmdheight=2                 " Better display for messages
+set updatetime=300              " You will have bad experience for diagnostic messages when it's default 4000.
+set signcolumn=yes              " always show signcolumns
 
 if !has('nvim')
     set viminfo=%,'50,\"100,:100,n~/.viminfo
@@ -70,7 +79,7 @@ set backspace=indent,eol,start
 " line numbers
 set relativenumber
 set number
-set numberwidth=5
+set numberwidth=4
 set cursorline
 
 " searching
@@ -98,7 +107,7 @@ set shiftwidth=4
 
 autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
-let mapleader=","
+let mapleader=','
 
 set ttimeoutlen=50
 set history=100
@@ -106,7 +115,7 @@ set history=100
 " mouse support
 set mouse=a
 if !has('nvim')
-    if has("mouse_sgr")
+    if has('mouse_sgr')
         set ttymouse=sgr
     else
         set ttymouse=xterm2
@@ -166,59 +175,67 @@ vmap > >gv
 
 
 """""""""""""""""""""""""""""""
-" airline
+" lightline
 """""""""""""""""""""""""""""""
-"let g:airline_extensions = []
-let g:airline_detect_modified=1
-let g:airline_detect_paste=1
-let g:airline_detect_iminsert=0
-" determine whether inactive windows should have the left section collapsed to only the filename of that buffer.
-let g:airline_inactive_collapse=1
-" defines whether the preview window should be excluded from have its window statusline modified
-" (may help with plugins which use the preview window heavily)
-let g:airline_exclude_preview = 0
-let g:airline_theme             = 'deus'
-"let g:airline_theme             = 'powerlineish'
-let g:airline_enable_branch     = 1
-let g:airline_enable_syntastic  = 1
-" Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-" Show just the filename
-"let g:airline#extensions#tabline#fnamemod = ':t'
-" (mode, paste, iminsert)
-call airline#parts#define('mode', {
-      \ 'function': 'airline#parts#mode',
-      \ 'accent': 'none',
-      \ })
-"let g:airline_section_a = airline#section#create(['mode', 'paste', 'iminsert'])
-" (hunks, branch)
-"let g:airline_section_b
-" (bufferline or filename)
-"let g:airline_section_c
-" (readonly, csv)
-"let g:airline_section_gutter
-" (tagbar, filetype, virtualenv)
-"let g:airline_section_x="%y \ ts:\ %{&ts}\ \ sw:\ %{&shiftwidth}"
-" (fileencoding, fileformat)
-"let g:airline_section_y
-" (percentage, line number, column number)
-let g:airline_section_z = '%3p%% %5l/%L :%3v'
-" (syntastic, whitespace)
-"let g:airline_section_warning
 
-let g:airline_powerline_fonts=1
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-"let g:airline_left_sep = ''
-"let g:airline_left_alt_sep = ''
-"let g:airline_right_sep = ''
-"let g:airline_right_alt_sep = ''
-"let g:airline_symbols.branch = ''
-"let g:airline_symbols.readonly = 'RO'
-"let g:airline_symbols.linenr = 'LN'
-"let g:airline#extensions#tabline#left_sep = ''
-"let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:lightline = {}
+let g:lightline.colorscheme = 'powerline'
+let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
+
+set showtabline=2
+let g:lightline.tabline = {'left': [['buffers']], 'right': [[]]}
+let g:lightline#bufferline#show_number = 0
+let g:lightline#bufferline#unnamed = '[No Name]'
+let g:lightline#bufferline#filename_modifier = ':t'
+let g:lightline#bufferline#enable_devicons = 1
+
+let g:lightline.component = {
+     \ 'lineinfo': '%3l/%L : %-2v',
+     \ 'filename': '%F',
+     \}
+let g:lightline.component_expand = {
+    \ 'buffers': 'lightline#bufferline#buffers',
+    \ 'linter_checking': 'lightline#ale#checking',
+    \ 'linter_infos': 'lightline#ale#infos',
+    \ 'linter_warnings': 'lightline#ale#warnings',
+    \ 'linter_errors': 'lightline#ale#errors',
+    \ 'linter_ok': 'lightline#ale#ok',
+    \}
+let g:lightline.component_function = {
+    \ 'readonly': 'LightlineReadonly',
+    \ 'fugitive': 'LightlineFugitive',
+    \}
+let g:lightline.component_type = {
+    \ 'buffers': 'tabsel',
+    \ 'linter_checking': 'middle',
+    \ 'linter_infos': 'right',
+    \ 'linter_warnings': 'warning',
+    \ 'linter_errors': 'error',
+    \ 'linter_ok': 'right',
+    \}
+
+let g:lightline.active = {
+    \ 'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'filename', 'modified' ] ],
+    \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos' , 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+    \}
+
+" use powerline/nerdfont symbols
+"let g:lightline.separator = { 'left': '', 'right': '' }
+"let g:lightline.subseparator = { 'left': '', 'right': '' }
+function! LightlineReadonly()
+    return &readonly ? '' : ''
+endfunction
+function! LightlineFugitive()
+    if exists('*FugitiveHead')
+        let branch = FugitiveHead()
+        return branch !=# '' ? ' '.branch : ''
+    endif
+    return ''
+endfunction
+
+let g:unite_force_overwrite_statusline = 0
+let g:vimfiler_force_overwrite_statusline = 0
+let g:vimshell_force_overwrite_statusline = 0
 
 
 """""""""""""""""""""""""""""""
@@ -247,6 +264,9 @@ nnoremap <silent> <Leader>b :Buffers<CR>
 nnoremap <silent> <Leader>l :Lines<CR>
 nnoremap <silent> <Leader>c :Commits<CR>
 nnoremap <silent> <Leader>o :Colors<CR>
+
+" Ignore filename for ripgrep
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
@@ -321,15 +341,43 @@ autocmd  FileType fzf set laststatus=0 noshowmode noruler
 " ale
 """""""""""""""""""""""""""""""
 
-" keep gutter open
+" Keep gutter open
 let g:ale_sign_column_always = 1
 
-" fixers and linters
+" Use quickfix list instead of loclist
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+
+" Fixers and linters
 let g:ale_linters_explicit = 1
-let g:ale_linters = {'html': ['htmlhint'], 'javascript': ['tsserver']}
+let g:ale_linters = { 'vim': ['vint'], 'html': ['htmlhint'], 'javascript': ['tsserver']}
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'javascript': ['prettier'], 'css': ['prettier'], 'html': ['html-beautify']}
 
+let g:ale_warn_about_trailing_whitespace = 1
+   
+" Symbols and colors
+highlight ALEErrorSign guifg=red
+highlight ALEWarningSign guifg=yellow
+let g:ale_sign_error = '⛔'
+let g:ale_sign_warning = '🔔'
+let g:lightline#ale#indicator_checking = ''
+let g:lightline#ale#indicator_warnings = '🔔'
+let g:lightline#ale#indicator_errors = '⛔'
+let g:lightline#ale#indicator_ok = ''
+
 nmap <Leader>p :ALEFix<CR>
+
+" Toggle quick list
+nnoremap <F4> :call QFixToggle()<CR>
+function! QFixToggle()
+  if exists('g:qfix_win')
+    cclose
+    unlet g:qfix_win
+  else
+    copen 10
+    let g:qfix_win = bufnr('$')
+  endif
+endfunction
 
 
 """""""""""""""""""""""""""""""
@@ -337,25 +385,6 @@ nmap <Leader>p :ALEFix<CR>
 """""""""""""""""""""""""""""""
 
 let g:coc_global_extensions = ['coc-json','coc-tsserver','coc-html','coc-css','coc-yaml']
-
-" if hidden is not set, TextEdit might fail.
-set hidden
-
-" Some servers have issues with backup files, see #649
-set nobackup
-set nowritebackup
-
-" Better display for messages
-set cmdheight=2
-
-" You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
-
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
-
-" always show signcolumns
-set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -416,7 +445,6 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Fix autofix problem of current line
 "nmap <leader>qf  <Plug>(coc-fix-current)
-nmap C-1  <Plug>(coc-fix-current)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 CocFormat :call CocAction('format')
@@ -475,15 +503,15 @@ autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nnoremap <leader>q :bp<cr>:bd #<cr>
 
 let g:NERDTreeIndicatorMapCustom = {
-                \ "Modified"  : "",
-                \ "Staged"    : "",
-                \ "Untracked" : "",
-                \ "Renamed"   : "",
-                \ "Unmerged"  : "",
-                \ "Deleted"   : "",
-                \ "Dirty"     : "",
-                \ "Clean"     : "",
-                \ "Unknown"   : ""
+                \ 'Modified'  : '',
+                \ 'Staged'    : '',
+                \ 'Untracked' : '',
+                \ 'Renamed'   : '',
+                \ 'Unmerged'  : '',
+                \ 'Deleted'   : '',
+                \ 'Dirty'     : '',
+                \ 'Clean'     : '',
+                \ 'Unknown'   : ''
                 \ }
 
 """""""""""""""""""""""""""""""
@@ -495,7 +523,7 @@ map <F3> :Vista!!<CR>
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious. e.g., more compact: ["▸ ", ""]
 " Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
-let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
 
 " Executive used when opening vista sidebar without specifying it.
 " See all the avaliable executives via `:echo g:vista#executives`.
@@ -519,6 +547,6 @@ let g:vista#renderer#enable_icon = 1
 
 " The default icons can't be suitable for all the filetypes, you can extend it as you wish.
 let g:vista#renderer#icons = {
-\   "function": "\uf794",
-\   "variable": "\uf71b",
+\   'function': '\uf794',
+\   'variable': '\uf71b',
 \  }
