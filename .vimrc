@@ -21,6 +21,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'airblade/vim-rooter'
 Plug 'pearofducks/ansible-vim'
 Plug 'liuchengxu/vista.vim'
+Plug 'ap/vim-css-color'
+Plug 'mbbill/undotree'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'ayu-theme/ayu-vim'
@@ -107,7 +109,7 @@ set shiftwidth=4
 
 autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
-let mapleader=','
+let mapleader=' '
 
 set ttimeoutlen=50
 set history=100
@@ -135,6 +137,7 @@ if has('persistent_undo')       " create undo dir if it does not exist
     set undofile                    " Save undos after file closes
     set undodir=$HOME/.vim/undo     " where to save undo histories
 endif
+nnoremap <leader>u :UndotreeShow<CR>
 
 " shortcuts for switching between buffers
 nmap <C-b> :bp<cr>
@@ -144,8 +147,7 @@ map <F11> :make<CR>
 cmap w!! w !sudo tee % >/dev/null  " w!! let's you sudo after file was opened!
 
 " jump to the last position when reopening a file
-au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \| exe "normal g'\"" | endif
+au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
 " make yank/paste use the global system clipboard
 set clipboard=unnamed
@@ -207,7 +209,7 @@ let g:lightline.component_function = {
     \}
 let g:lightline.component_type = {
     \ 'buffers': 'tabsel',
-    \ 'linter_checking': 'middle',
+    \ 'linter_checking': 'right',
     \ 'linter_infos': 'right',
     \ 'linter_warnings': 'warning',
     \ 'linter_errors': 'error',
@@ -233,6 +235,11 @@ function! LightlineFugitive()
     return ''
 endfunction
 
+let g:lightline#ale#indicator_checking = ''
+let g:lightline#ale#indicator_warnings = '🔔'
+let g:lightline#ale#indicator_errors = '⛔'
+let g:lightline#ale#indicator_ok = ''
+
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
 let g:vimshell_force_overwrite_statusline = 0
@@ -241,7 +248,8 @@ let g:vimshell_force_overwrite_statusline = 0
 """""""""""""""""""""""""""""""
 " Fugitive
 """""""""""""""""""""""""""""""
-nnoremap <leader>gd :Gvdiff<CR>
+
+"nnoremap <leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
 
@@ -360,10 +368,6 @@ highlight ALEErrorSign guifg=red
 highlight ALEWarningSign guifg=yellow
 let g:ale_sign_error = '⛔'
 let g:ale_sign_warning = '🔔'
-let g:lightline#ale#indicator_checking = ''
-let g:lightline#ale#indicator_warnings = '🔔'
-let g:lightline#ale#indicator_errors = '⛔'
-let g:lightline#ale#indicator_ok = ''
 
 nmap <Leader>p :ALEFix<CR>
 
@@ -490,8 +494,9 @@ let g:user_emmet_leader_key='<C-y>'
 
 map <F2> :NERDTreeToggle<CR>
 
-let NERDTreeShowHidden = 1
+let g:NERDTreeShowHidden = 1
 let g:NERDTreeWinSize = 50
+let g:NERDTreeAutoDeleteBuffer = 1
 
 " Make sure no files or other buffers are opened in NT buffer
 autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
