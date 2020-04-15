@@ -65,11 +65,13 @@ set shortmess+=c                " don't give ins-completion-menu messages.
 set comments=b:#,:%,fb:-,n:>,n:),sl:/**,mb:\ *,elx:\ */
 set completeopt=longest,menuone " popup menu doesn't select the first completion item, but inserts the longest common text of all matches; menu will come up even if there's only one match
 set hidden                      " if hidden is not set, TextEdit might fail.
-set nobackup                    " Some LSP servers have issues with backup files, see #649
-set nowritebackup               " Some LSP servers have issues with backup files, see #649
-"set cmdheight=2                 " Better display for messages
-set updatetime=300              " You will have bad experience for diagnostic messages when it's default 4000.
+set nobackup                    " some LSP servers have issues with backup files, see #649
+set nowritebackup               " some LSP servers have issues with backup files, see #649
+"set cmdheight=2                 " better display for messages
+set updatetime=300              " you will have bad experience for diagnostic messages when it's default 4000.
 set signcolumn=yes              " always show signcolumns
+set autoindent                  " add indentation from current line for next line
+set smartindent                 " indent lines after {, before } and after cinwords
 
 if !has('nvim')
     set viminfo=%,'50,\"100,:100,n~/.viminfo
@@ -94,7 +96,6 @@ set foldmethod=indent
 set foldnestmax=3
 set nofoldenable
 set foldlevel=1
-nnoremap <tab> za
 
 " show white space?
 set list
@@ -137,13 +138,7 @@ if has('persistent_undo')       " create undo dir if it does not exist
     set undofile                    " Save undos after file closes
     set undodir=$HOME/.vim/undo     " where to save undo histories
 endif
-nnoremap <leader>u :UndotreeShow<CR>
 
-" shortcuts for switching between buffers
-nmap <C-b> :bp<cr>
-nmap <C-n> :bn<cr>
-
-map <F11> :make<CR>
 cmap w!! w !sudo tee % >/dev/null  " w!! let's you sudo after file was opened!
 
 " jump to the last position when reopening a file
@@ -151,6 +146,15 @@ au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'
 
 " make yank/paste use the global system clipboard
 set clipboard=unnamed
+
+" Indent and keep selection
+vmap < <gv
+vmap > >gv
+
+
+"""""""""""""""""""""""""""""""
+" shortcuts
+"""""""""""""""""""""""""""""""
 
 " make 'd' only delete (not yank), and 'leader d' cut (idea from https://github.com/pazams/d-is-for-delete)
 nnoremap X "_X
@@ -171,9 +175,36 @@ xnoremap <leader>d "*d
 nnoremap <leader>D "*D
 xnoremap <leader>D "*D
 
-" Indent and keep selection
-vmap < <gv
-vmap > >gv
+" shortcuts for switching between buffers
+nnoremap <C-b> :bp<cr>
+nnoremap <C-n> :bn<cr>
+
+" Map a few common things to do with FZF.
+nnoremap <silent> <C-p> :FZF -m<CR>
+nnoremap <silent> <Leader>r :Rg<CR>
+nnoremap <silent> <Leader>b :Buffers<CR>
+nnoremap <silent> <Leader>l :Lines<CR>
+nnoremap <silent> <Leader>c :Commits<CR>
+
+nnoremap <Leader>p :ALEFix<CR>
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>v :edit ~/.vimrc<CR>
+
+" CoC
+nnoremap <leader>rn <Plug>(coc-rename)
+nnoremap <Leader>f :CocFormat<CR>
+nnoremap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> gy <Plug>(coc-type-definition)
+nnoremap <silent> gi <Plug>(coc-implementation)
+nnoremap <silent> gr <Plug>(coc-references)
+
+" Emmet
+let g:user_emmet_leader_key='<C-y>'
+
+" Shortcut for closing text buffer and switching to next file buffer
+nnoremap <leader>q :bp<cr>:bd #<cr>
+
+nnoremap <F4> :call QFixToggle()<CR>
 
 
 """""""""""""""""""""""""""""""
@@ -181,11 +212,11 @@ vmap > >gv
 """""""""""""""""""""""""""""""
 
 let g:lightline = {}
-let g:lightline.colorscheme = 'powerline'
+let g:lightline.colorscheme = 'ayu_mirage'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
 
 set showtabline=2
-let g:lightline.tabline = {'left': [['buffers']], 'right': [[]]}
+let g:lightline.tabline = {'left': [['buffers']], 'right': [[ 'buffers_text' ]]}
 let g:lightline#bufferline#show_number = 0
 let g:lightline#bufferline#unnamed = '[No Name]'
 let g:lightline#bufferline#filename_modifier = ':t'
@@ -193,7 +224,7 @@ let g:lightline#bufferline#enable_devicons = 1
 
 let g:lightline.component = {
      \ 'lineinfo': '%3l/%L : %-2v',
-     \ 'filename': '%F',
+     \ 'buffers_text': 'buffers',
      \}
 let g:lightline.component_expand = {
     \ 'buffers': 'lightline#bufferline#buffers',
@@ -217,13 +248,13 @@ let g:lightline.component_type = {
     \}
 
 let g:lightline.active = {
-    \ 'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'filename', 'modified' ] ],
+    \ 'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'absolutepath', 'modified' ] ],
     \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos' , 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
     \}
 
 " use powerline/nerdfont symbols
-"let g:lightline.separator = { 'left': '', 'right': '' }
-"let g:lightline.subseparator = { 'left': '', 'right': '' }
+let g:lightline.separator = { 'left': '', 'right': '' }
+let g:lightline.subseparator = { 'left': '', 'right': '' }
 function! LightlineReadonly()
     return &readonly ? '' : ''
 endfunction
@@ -246,45 +277,16 @@ let g:vimshell_force_overwrite_statusline = 0
 
 
 """""""""""""""""""""""""""""""
-" Fugitive
-"""""""""""""""""""""""""""""""
-
-"nnoremap <leader>gd :Gvdiff<CR>
-nnoremap gdh :diffget //2<CR>
-nnoremap gdl :diffget //3<CR>
-
-
-"""""""""""""""""""""""""""""""
 " fzf
 """""""""""""""""""""""""""""""
 
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*"'
-"let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
-"let $FZF_DEFAULT_OPTS="--preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (bat --style=numbers --color=always {} || highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null'"
-"let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
-
-" Launch fzf with CTRL+P.
-nnoremap <silent> <C-p> :FZF -m<CR>
-
-" Map a few common things to do with FZF.
-nnoremap <silent> <Leader>r :Rg<CR>
-nnoremap <silent> <Leader>b :Buffers<CR>
-nnoremap <silent> <Leader>l :Lines<CR>
-nnoremap <silent> <Leader>c :Commits<CR>
-nnoremap <silent> <Leader>o :Colors<CR>
 
 " Ignore filename for ripgrep
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
-"imap <c-x><c-f> <plug>(fzf-complete-path)
-"imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Advanced customization using Vim function
@@ -369,10 +371,7 @@ highlight ALEWarningSign guifg=yellow
 let g:ale_sign_error = '⛔'
 let g:ale_sign_warning = '🔔'
 
-nmap <Leader>p :ALEFix<CR>
-
 " Toggle quick list
-nnoremap <F4> :call QFixToggle()<CR>
 function! QFixToggle()
   if exists('g:qfix_win')
     cclose
@@ -407,16 +406,7 @@ endfunction
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -432,9 +422,6 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
@@ -443,40 +430,14 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Fix autofix problem of current line
-"nmap <leader>qf  <Plug>(coc-fix-current)
-
 " Use `:Format` to format current buffer
 command! -nargs=0 CocFormat :call CocAction('format')
-nmap <Leader>f :CocFormat<CR>
 
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 
 """""""""""""""""""""""""""""""
@@ -485,7 +446,6 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
-let g:user_emmet_leader_key='<C-y>'
 
 
 """""""""""""""""""""""""""""""
@@ -503,9 +463,6 @@ autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | en
 
 " Close vim if only NT window left
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" Shortcut for closing text buffer and switching to next file buffer
-nnoremap <leader>q :bp<cr>:bd #<cr>
 
 let g:NERDTreeIndicatorMapCustom = {
                 \ 'Modified'  : '',
