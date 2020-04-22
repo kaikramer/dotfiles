@@ -2,9 +2,9 @@ scriptencoding utf-8
 
 call plug#begin('~/.vim/plugged')
 Plug 'dense-analysis/ale'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mattn/emmet-vim'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeFind', 'NERDTreeClose', 'NERDTreeToggle', 'NERDTreeRefreshRoot']}
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -23,26 +23,21 @@ Plug 'pearofducks/ansible-vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'ap/vim-css-color'
 Plug 'mbbill/undotree'
-Plug 'arcticicestudio/nord-vim'
+"Plug 'arcticicestudio/nord-vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'ayu-theme/ayu-vim'
 call plug#end()
 
 " colors
 syntax on
-if !has('nvim')
-    set ttytype=xterm-256color
-endif
 if (has('termguicolors'))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
-set t_Co=256
 let ayucolor='mirage'
 colorscheme ayu
 set background=dark
-let g:rehash256=1
 
 set fileencodings=utf-8,latin1  " auto detection of file encoding
 "set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc>
@@ -130,16 +125,17 @@ set undolevels=1000             " How many undos
 set undoreload=10000            " number of lines to save for undo
 let vimDir = '$HOME/.vim'       " Put plugins and dictionaries in this dir (also on Windows)
 let &runtimepath.=','.vimDir
-if has('persistent_undo')       " create undo dir if it does not exist
-    let myUndoDir = expand(vimDir . '/undo')
-    call system('mkdir ' . vimDir)
-    call system('mkdir ' . myUndoDir)
-    let &undodir = myUndoDir
-    set undofile                    " Save undos after file closes
-    set undodir=$HOME/.vim/undo     " where to save undo histories
-endif
+"if has('persistent_undo')       " create undo dir if it does not exist
+"    let myUndoDir = expand(vimDir . '/undo')
+"    call system('mkdir ' . vimDir)
+"    call system('mkdir ' . myUndoDir)
+"    let &undodir = myUndoDir
+"endif
+set undofile                    " Save undos after file closes
+set undodir=$HOME/.vim/undo     " where to save undo histories
 
-cmap w!! w !sudo tee % >/dev/null  " w!! let's you sudo after file was opened!
+" w!! let's you sudo after file was opened!
+cmap w!! w !sudo tee % >/dev/null  
 
 " jump to the last position when reopening a file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
@@ -387,57 +383,57 @@ endfunction
 " coc
 """""""""""""""""""""""""""""""
 
-let g:coc_global_extensions = ['coc-json','coc-tsserver','coc-html','coc-css','coc-yaml']
-
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Use `:Format` to format current buffer
-command! -nargs=0 CocFormat :call CocAction('format')
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+"let g:coc_global_extensions = ['coc-json','coc-tsserver','coc-html','coc-css','coc-yaml']
+"
+"" Use tab for trigger completion with characters ahead and navigate.
+"" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+"inoremap <silent><expr> <TAB>
+"      \ pumvisible() ? "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<TAB>" :
+"      \ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"
+"function! s:check_back_space() abort
+"  let col = col('.') - 1
+"  return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+"
+"" Use <c-space> to trigger completion.
+"inoremap <silent><expr> <c-space> coc#refresh()
+"
+"" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"
+"" Use K to show documentation in preview window
+"nnoremap <silent> K :call <SID>show_documentation()<CR>
+"
+"function! s:show_documentation()
+"  if (index(['vim','help'], &filetype) >= 0)
+"    execute 'h '.expand('<cword>')
+"  else
+"    call CocAction('doHover')
+"  endif
+"endfunction
+"
+"" Highlight symbol under cursor on CursorHold
+"autocmd CursorHold * silent call CocActionAsync('highlight')
+"
+"augroup mygroup
+"  autocmd!
+"  " Setup formatexpr specified filetype(s).
+"  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"  " Update signature help on jump placeholder
+"  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+"augroup end
+"
+"" Use `:Format` to format current buffer
+"command! -nargs=0 CocFormat :call CocAction('format')
+"
+"" use `:OR` for organize import of current buffer
+"command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+"
+"" Add status line support, for integration with other plugin, checkout `:h coc-status`
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 
 """""""""""""""""""""""""""""""
