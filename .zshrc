@@ -125,7 +125,7 @@ alias gst='git status'
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
 # Completion settings
-unsetopt MENU_COMPLETE   # do not autoselect the first completion entry
+setopt MENU_COMPLETE   # autoselect the first completion entry
 unsetopt FLOWCONTROL
 unset CASE_SENSITIVE HYPHEN_INSENSITIVE
 setopt AUTO_MENU         # show completion menu on successive tab press

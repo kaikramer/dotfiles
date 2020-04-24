@@ -23,7 +23,7 @@ Plug 'pearofducks/ansible-vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'ap/vim-css-color'
 Plug 'mbbill/undotree'
-"Plug 'arcticicestudio/nord-vim'
+Plug 'arcticicestudio/nord-vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'ayu-theme/ayu-vim'
 call plug#end()
@@ -36,8 +36,8 @@ if (has('termguicolors'))
     set termguicolors
 endif
 let ayucolor='mirage'
-colorscheme ayu
 set background=dark
+colorscheme nord
 
 set fileencodings=utf-8,latin1  " auto detection of file encoding
 "set esckeys                     " when this option is off, the cursor and function keys cannot be used in Insert mode if they start with an <Esc>
@@ -66,7 +66,7 @@ set nowritebackup               " some LSP servers have issues with backup files
 set updatetime=300              " you will have bad experience for diagnostic messages when it's default 4000.
 set signcolumn=yes              " always show signcolumns
 set autoindent                  " add indentation from current line for next line
-set smartindent                 " indent lines after {, before } and after cinwords
+set cindent                     " indent lines after {, before } and after cinwords
 
 if !has('nvim')
     set viminfo=%,'50,\"100,:100,n~/.viminfo
@@ -208,7 +208,7 @@ nnoremap <F4> :call QFixToggle()<CR>
 """""""""""""""""""""""""""""""
 
 let g:lightline = {}
-let g:lightline.colorscheme = 'ayu_mirage'
+let g:lightline.colorscheme = 'nord'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
 
 set showtabline=2
