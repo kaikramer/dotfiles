@@ -85,7 +85,7 @@ fi
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt appendhistory
+setopt APPEND_HISTORY
 
 # Avoid spamming history with duplicate entries
 setopt EXTENDED_HISTORY

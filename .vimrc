@@ -23,10 +23,15 @@ Plug 'pearofducks/ansible-vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'ap/vim-css-color'
 Plug 'mbbill/undotree'
-Plug 'arcticicestudio/nord-vim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
 call plug#end()
+
+" declare self-cleaning augroup and add all autocmds to that group later
+augroup mygroup
+    autocmd!
+augroup
 
 " colors
 syntax on
@@ -103,7 +108,7 @@ set shiftround                  " round indent to multiple of 'shiftwidth'
 set tabstop=4
 set shiftwidth=4
 
-autocmd Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd mygroup Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
 let mapleader=' '
 
@@ -338,9 +343,8 @@ let g:fzf_colors =
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Hide statusline
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
+  \| autocmd mygroup BufLeave <buffer> set laststatus=2 showmode ruler
 
 
 """""""""""""""""""""""""""""""
@@ -416,15 +420,12 @@ endfunction
 "endfunction
 "
 "" Highlight symbol under cursor on CursorHold
-"autocmd CursorHold * silent call CocActionAsync('highlight')
-"
-"augroup mygroup
-"  autocmd!
+"autocmd mygroup CursorHold * silent call CocActionAsync('highlight')
+
 "  " Setup formatexpr specified filetype(s).
-"  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"  autocmd mygroup FileType typescript,json setl formatexpr=CocAction('formatSelected')
 "  " Update signature help on jump placeholder
-"  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"augroup end
+"  autocmd mygroup User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 "
 "" Use `:Format` to format current buffer
 "command! -nargs=0 CocFormat :call CocAction('format')
@@ -441,7 +442,7 @@ endfunction
 """""""""""""""""""""""""""""""
 
 let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
+autocmd mygroup FileType html,css EmmetInstall
 
 
 """""""""""""""""""""""""""""""
@@ -455,10 +456,10 @@ let g:NERDTreeWinSize = 50
 let g:NERDTreeAutoDeleteBuffer = 1
 
 " Make sure no files or other buffers are opened in NT buffer
-autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
+autocmd mygroup BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
 
 " Close vim if only NT window left
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd mygroup BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 let g:NERDTreeIndicatorMapCustom = {
                 \ 'Modified'  : '',
