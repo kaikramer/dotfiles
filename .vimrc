@@ -31,7 +31,7 @@ call plug#end()
 " declare self-cleaning augroup and add all autocmds to that group later
 augroup mygroup
     autocmd!
-augroup
+augroup end
 
 " colors
 syntax on
