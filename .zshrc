@@ -161,10 +161,9 @@ unsetopt BG_NICE
 setopt interactivecomments
 
 # include hidden files for CTRL-T command
-export FZF_CTRL_T_COMMAND="find . -type f -not -path '*/\.git/*'"
-
-# Let "ssh <TAB>" start completion (no "**" required)
-#export FZF_COMPLETION_TRIGGER=""
+export FZF_DEFAULT_COMMAND='fd --type file --hidden --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS="--ansi"
 
 export LC_ALL="en_US.UTF-8"
 
