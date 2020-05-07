@@ -14,6 +14,7 @@ Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-peekaboo'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'maximbaz/lightline-ale'
@@ -67,7 +68,7 @@ set completeopt=longest,menuone " popup menu doesn't select the first completion
 set hidden                      " if hidden is not set, TextEdit might fail.
 set nobackup                    " some LSP servers have issues with backup files, see #649
 set nowritebackup               " some LSP servers have issues with backup files, see #649
-"set cmdheight=2                 " better display for messages
+set cmdheight=2                 " better display for messages
 set updatetime=300              " you will have bad experience for diagnostic messages when it's default 4000.
 set signcolumn=yes              " always show signcolumns
 set autoindent                  " add indentation from current line for next line
@@ -139,73 +140,51 @@ let &runtimepath.=','.vimDir
 set undofile                    " Save undos after file closes
 set undodir=$HOME/.vim/undo     " where to save undo histories
 
-" w!! let's you sudo after file was opened!
-cmap w!! w !sudo tee % >/dev/null  
-
 " jump to the last position when reopening a file
-au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
+autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
 " make yank/paste use the global system clipboard
 set clipboard=unnamed
-
-" Indent and keep selection
-vmap < <gv
-vmap > >gv
 
 
 """""""""""""""""""""""""""""""
 " shortcuts
 """""""""""""""""""""""""""""""
 
-" make 'd' only delete (not yank), and 'leader d' cut (idea from https://github.com/pazams/d-is-for-delete)
-nnoremap X "_X
-nnoremap x "_x
-xnoremap x "_x
-nnoremap D "_D
-nnoremap d "_d
-xnoremap d "_d
-nnoremap C "_C
-nnoremap c "_c
-xnoremap c "_c
-xnoremap p "0p
-xnoremap P "0P
-nnoremap <BS> "_X
-nnoremap <Del> "_x
-nnoremap <leader>d "*d
-xnoremap <leader>d "*d
-nnoremap <leader>D "*D
-xnoremap <leader>D "*D
-
 " shortcuts for switching between buffers
 nnoremap <C-b> :bp<cr>
 nnoremap <C-n> :bn<cr>
 
 " Map a few common things to do with FZF.
-nnoremap <silent> <C-p> :FZF -m<CR>
-nnoremap <silent> <Leader>r :Rg<CR>
-nnoremap <silent> <Leader>b :Buffers<CR>
-nnoremap <silent> <Leader>l :Lines<CR>
-nnoremap <silent> <Leader>c :Commits<CR>
+nnoremap <silent> <leader>f :FZF -m<CR>
+nnoremap <silent> <leader>r :rg<cr>
+nnoremap <silent> <leader>b :buffers<cr>
+nnoremap <silent> <leader>l :lines<cr>
+nnoremap <silent> <leader>c :commits<cr>
 
-nnoremap <Leader>p :ALEFix<CR>
+nnoremap <leader>p :ALEFix<CR>
 nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>v :edit ~/.vimrc<CR>
 
-" CoC
-nnoremap <leader>rn <Plug>(coc-rename)
-nnoremap <Leader>f :CocFormat<CR>
-nnoremap <silent> gd <Plug>(coc-definition)
-nnoremap <silent> gy <Plug>(coc-type-definition)
-nnoremap <silent> gi <Plug>(coc-implementation)
-nnoremap <silent> gr <Plug>(coc-references)
+" CoC -> TODO gr is used by other plugin
+" nnoremap <silent> f :CocFormat<CR>
+" nnoremap <silent> gd <Plug>(coc-definition)
+" nnoremap <silent> gr <Plug>(coc-references)
 
-" Emmet
-let g:user_emmet_leader_key='<C-y>'
+" Toggles
+nnoremap <F2> :NERDTreeToggle<CR>
+nnoremap <F3> :Vista!!<CR>
+nnoremap <F4> :call QFixToggle()<CR>
 
 " Shortcut for closing text buffer and switching to next file buffer
 nnoremap <leader>q :bp<cr>:bd #<cr>
 
-nnoremap <F4> :call QFixToggle()<CR>
+" Indent and keep selection
+vmap < <gv
+vmap > >gv
+
+" w!! let's you sudo after file was opened!
+cmap w!! w !sudo tee % >/dev/null
 
 
 """""""""""""""""""""""""""""""
@@ -281,46 +260,18 @@ let g:vimshell_force_overwrite_statusline = 0
 " fzf
 """""""""""""""""""""""""""""""
 
-let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*"'
+let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --exclude .git'
 
 " Ignore filename for ripgrep
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
-" Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-" Advanced customization using Vim function
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
-
 " Replace the default dictionary completion with fzf-based fuzzy completion
 inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/words')
 
-" An action can be a reference to a function that processes selected lines
-function! s:build_quickfix_list(lines)
-  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
-  copen
-  cc
-endfunction
-
-" This is the default extra key bindings
-let g:fzf_action = {
-  \ 'ctrl-q': function('s:build_quickfix_list'),
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
-
-" Default fzf layout
-" - down / up / left / right
-let g:fzf_layout = { 'down': '~40%' }
-
 " You can set up fzf window using a Vim command (Neovim or latest Vim 8 required)
-"let g:fzf_layout = { 'window': 'enew' }
-"let g:fzf_layout = { 'window': '-tabnew' }
-"let g:fzf_layout = { 'window': '10new' }
+let g:fzf_layout = { 'window': 'enew' }
 
 " Customize fzf colors to match your color scheme
-" - fzf#wrap translates this to a set of `--color` options
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -335,12 +286,6 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
-
-" Enable per-command history
-" - History files will be stored in the specified directory
-" - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
-"   'previous-history' instead of 'down' and 'up'.
-let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Hide statusline
 autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
@@ -421,7 +366,7 @@ endfunction
 "
 "" Highlight symbol under cursor on CursorHold
 "autocmd mygroup CursorHold * silent call CocActionAsync('highlight')
-
+"
 "  " Setup formatexpr specified filetype(s).
 "  autocmd mygroup FileType typescript,json setl formatexpr=CocAction('formatSelected')
 "  " Update signature help on jump placeholder
@@ -449,8 +394,6 @@ autocmd mygroup FileType html,css EmmetInstall
 " NERDTree
 """""""""""""""""""""""""""""""
 
-map <F2> :NERDTreeToggle<CR>
-
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeWinSize = 50
 let g:NERDTreeAutoDeleteBuffer = 1
@@ -473,11 +416,10 @@ let g:NERDTreeIndicatorMapCustom = {
                 \ 'Unknown'   : ''
                 \ }
 
+
 """""""""""""""""""""""""""""""
 " Vista
 """""""""""""""""""""""""""""""
-
-map <F3> :Vista!!<CR>
 
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious. e.g., more compact: ["▸ ", ""]
@@ -509,3 +451,18 @@ let g:vista#renderer#icons = {
 \   'function': '\uf794',
 \   'variable': '\uf71b',
 \  }
+
+
+"""""""""""""""""""""""""""""""
+" ansible-vim
+"""""""""""""""""""""""""""""""
+
+autocmd mygroup BufRead,BufNewFile */playbooks/*.yml set filetype=yaml.ansible
+
+
+"""""""""""""""""""""""""""""""
+" peekaboo
+"""""""""""""""""""""""""""""""
+
+let g:peekaboo_window = 'vert bo 50new'
+
