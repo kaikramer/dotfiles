@@ -98,7 +98,8 @@ export EDITOR='nvim'
 # Aliases
 alias ls='ls --color=auto -v'
 alias la='ls -la'
-alias vi=nvim
+alias vi='nvim'
+alias fd='fd --hidden --no-ignore'
 
 alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
 alias sp='openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
@@ -161,7 +162,7 @@ unsetopt BG_NICE
 setopt interactivecomments
 
 # include hidden files for CTRL-T command
-export FZF_DEFAULT_COMMAND='fd --type file --hidden --exclude .git'
+export FZF_DEFAULT_COMMAND='fd --type file --no-ignore --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--ansi"
 

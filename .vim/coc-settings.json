@@ -7,5 +7,6 @@
             "args" : ["-jar", "/home/kk/bin/groovy-language-server-all.jar"],
             "filetypes": ["groovy"]
         }
-    }
+    },
+    "python.jediEnabled": false
 }
