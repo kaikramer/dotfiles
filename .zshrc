@@ -96,7 +96,11 @@ setopt HIST_SAVE_NO_DUPS
 export EDITOR='nvim'
 
 # Aliases
-alias ls='ls --color=auto -v'
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    alias ls='ls --color=auto -v'
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls='ls -G'
+fi
 alias la='ls -la'
 alias vi='nvim'
 alias fd='fd --hidden --no-ignore'
