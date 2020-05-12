@@ -81,13 +81,13 @@ if [[ "${terminfo[kcbt]}" != "" ]]; then
   bindkey "${terminfo[kcbt]}" reverse-menu-complete   # [Shift-Tab] - move through the completion menu backwards
 fi
 
-# History
+# history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt APPEND_HISTORY
 
-# Avoid spamming history with duplicate entries
+# avoid spamming history with duplicate entries
 setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
@@ -95,7 +95,7 @@ setopt HIST_SAVE_NO_DUPS
 
 export EDITOR='nvim'
 
-# Aliases
+# aliases
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     alias ls='ls --color=auto -v'
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -117,7 +117,7 @@ alias ga='git add'
 alias gc='git commit -v'
 alias gd='git difftool'
 alias gf='git fetch'
-alias gl='git pull'
+alias gl='git pull --rebase'
 alias glg='git log --oneline --graph'
 alias glo='git log --oneline --decorate'
 alias gm='git merge'
@@ -126,44 +126,44 @@ alias gst='git status'
 
 #alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function above
 
-# Use Linux colors for ls on macOS
+# use Linux colors for ls on macOS
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
-# Completion settings
-setopt MENU_COMPLETE   # autoselect the first completion entry
-unsetopt FLOWCONTROL
-unset CASE_SENSITIVE HYPHEN_INSENSITIVE
-setopt AUTO_MENU         # show completion menu on successive tab press
-setopt COMPLETE_IN_WORD
-setopt ALWAYS_TO_END
-setopt NO_LIST_AMBIGUOUS
-zstyle ':completion:*:*:*:*:*' menu select
+# color output in man/less and case independent search
+export LESS=-Ri
+man() {
+    LESS_TERMCAP_md=$'\e[01;34m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;47;30m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    command man "$@"
+}
+
+# Misc. settings
+setopt NO_AUTO_CD           # always use cd command to change directory
+setopt NO_BG_NICE           # Workaround for "nice(5) failed", see https://github.com/Microsoft/WSL/issues/1887
+setopt INTERACTIVE_COMMENTS # recognize comments
+setopt NO_FLOW_CONTROL      # disable ⌃S to stop terminal output and ⌃Q to resume it
+setopt NO_BEEP
+
+# completion settings (see man zshoptions)
+setopt AUTO_LIST                                                                           # automatically list choices on an ambiguous completion
+setopt AUTO_MENU                                                                           # automatically show completion menu on successive tab press
+setopt NO_LIST_AMBIGUOUS                                                                   # do not complete up to unambiguous prefix without a completion list being displayed
+setopt NO_MENU_COMPLETE                                                                    # do not autoselect the first completion entry
+setopt NO_COMPLETE_IN_WORD                                                                 # do not start completion when cursor is somewhere in the middle of a word
+zstyle ':completion:*:*:*:*:*' menu select                                                 # select active entry in menu list with arrow keys and mark it with white background
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' special-dirs true  # . and ..
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-# disable named-directories autocompletion
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-# Use caching so that commands like apt and dpkg complete are useable
-zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
-# Allow for autocomplete to be case insensitive
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
-# man pages
-zstyle ':completion:*:manuals'    separate-sections true
-zstyle ':completion:*:manuals.*'  insert-sections   true
-zstyle ':completion:*:man:*'      menu yes select
-
-# Force file completion with shortcut "C-x f"
-zle -C complete-file complete-word _generic
-zstyle ':completion:complete-file::::' completer _files
-bindkey '^xf' complete-file
-
-# Workaround for "nice(5) failed", see https://github.com/Microsoft/WSL/issues/1887
-unsetopt BG_NICE
-
-# recognize comments
-setopt interactivecomments
+zstyle ':completion:::::' completer _expand _complete                                      # removed some unwanted completers: _all_matches _list _oldlist _menu _match _ignored _correct _approximate _prefix
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories   # disable named-directories autocompletion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*' # Allow for autocomplete to be case insensitive
+zstyle ':completion::complete:*' use-cache on                                              # Use caching so that commands like apt and dpkg complete are useable
+zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR                                 #                       "
+zstyle ':completion:*:man:*'      menu yes select                                          # man pages
+zstyle ':completion:*:manuals'    separate-sections true                                   #   "
+zstyle ':completion:*:manuals.*'  insert-sections   true                                   #   "
 
 # include hidden files for CTRL-T command
 export FZF_DEFAULT_COMMAND='fd --type file --no-ignore --hidden --exclude .git'

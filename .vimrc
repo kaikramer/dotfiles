@@ -25,6 +25,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'vim-scripts/ReplaceWithRegister'
     Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
+    Plug 'christoomey/vim-tmux-navigator'
 
     " fuzzy finder
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -120,7 +121,7 @@ set foldlevel=1
 
 " show white space?
 set list
-set listchars=tab:».,trail:.
+set listchars=tab:»·,trail:·,nbsp:␣
 highlight EoLSpace ctermfg=1 guifg=#BF616A
 match EoLSpace /\s\+$/
 
@@ -453,6 +454,18 @@ let g:vista#renderer#icons = {
 \   'function': '\uf794',
 \   'variable': '\uf71b',
 \  }
+
+
+"""""""""""""""""""""""""""""""
+" tmux navigator
+"""""""""""""""""""""""""""""""
+
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <M-Left>  :TmuxNavigateLeft<cr>
+nnoremap <silent> <M-Right> :TmuxNavigateRight<cr>
+nnoremap <silent> <M-Down>  :TmuxNavigateDown<cr>
+nnoremap <silent> <M-Up>    :TmuxNavigateUp<cr>
 
 
 """""""""""""""""""""""""""""""
