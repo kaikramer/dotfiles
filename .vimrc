@@ -27,10 +27,11 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
 
-    " fuzzy finder
+    " searching
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'airblade/vim-rooter'
+    Plug 'dyng/ctrlsf.vim'
 
     " status line
     Plug 'itchyny/lightline.vim'
@@ -42,6 +43,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'arcticicestudio/nord-vim'
     Plug 'ayu-theme/ayu-vim'
     Plug 'rakr/vim-one'
+    Plug 'cocopon/iceberg.vim'
     Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
@@ -186,8 +188,14 @@ nnoremap <silent> <leader>fm :Marks<CR>
 nnoremap <silent> <leader>fo :Colors<CR>
 nnoremap <silent> <leader>fr :Rg<CR>
 
+" CtrlSF
+nnoremap <leader>r :CtrlSF --hidden<Space>
+vmap <silent> <leader>r <Plug>CtrlSFVwordExec
+
 " miscellaneous mappings
 nnoremap <silent> <leader>qf :call QFixToggle()<CR>
+nnoremap <silent> <leader>qn :cnext<CR>
+nnoremap <silent> <leader>qp :cprevious<CR>
 nnoremap <silent> <leader>af :ALEFix<CR>
 nnoremap <silent> <leader>ut :UndotreeShow<CR>
 nnoremap <silent> <leader>st :Vista!!<CR>
@@ -200,9 +208,9 @@ nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 " CoC
 nnoremap <silent> gd <Plug>(coc-definition)  " use standard mapping for 'goto definition'
 nnoremap <silent> <leader>cf :CocFormat<CR>
-nnoremap <silent> <leader>cr <Plug>(coc-references)
 nnoremap <silent> <leader>cd :call <SID>show_documentation()<CR>
 nnoremap <silent> <leader>co :call CocAction('runCommand', 'editor.action.organizeImport')
+nmap <silent> <leader>cr <Plug>(coc-references)
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
@@ -469,6 +477,21 @@ nnoremap <silent> <M-Up>    :TmuxNavigateUp<cr>
 
 
 """""""""""""""""""""""""""""""
+" CtrlSF
+"""""""""""""""""""""""""""""""
+
+let g:ctrlsf_confirm_save = 0
+
+" search for .git instead of using current working directory
+let g:ctrlsf_default_root = 'project'
+
+" focus result pane right at the start
+let g:ctrlsf_auto_focus = {
+    \ "at": "start"
+    \ }
+
+
+"""""""""""""""""""""""""""""""
 " Misc plugins
 """""""""""""""""""""""""""""""
 
@@ -482,3 +505,4 @@ let g:peekaboo_window = 'vert bo 50new'
 if has('nvim')
     lua require'colorizer'.setup()
 end
+
