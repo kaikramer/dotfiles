@@ -1,6 +1,6 @@
 scriptencoding utf-8
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.vim/plugged')"{{{
     " syntax and language support
     Plug 'dense-analysis/ale'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -46,13 +46,15 @@ call plug#begin('~/.vim/plugged')
     Plug 'cocopon/iceberg.vim'
     Plug 'ryanoasis/vim-devicons'
 call plug#end()
+"}}}
 
-" declare self-cleaning augroup and add all autocmds to that group later
+" declare self-cleaning augroup and add all autocmds to that group later{{{
 augroup mygroup
     autocmd!
 augroup end
+"}}}
 
-" colors
+" colors{{{
 syntax on
 if (has('termguicolors'))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -62,7 +64,9 @@ endif
 let ayucolor='mirage'
 set background=dark
 colorscheme nord
+"}}}
 
+" misc settings {{{
 set fileencodings=utf-8,latin1  " auto detection of file encoding
 set visualbell                  " flash screen, no beeping
 set t_vb=                       " no flash
@@ -116,10 +120,9 @@ set incsearch
 set ignorecase
 
 " folding
-set foldmethod=indent
-set foldnestmax=3
-set nofoldenable
-set foldlevel=1
+set foldmethod=marker
+set foldenable
+set foldlevel=0
 
 " show white space?
 set list
@@ -165,9 +168,10 @@ set undodir=$HOME/.vim/undo     " where to save undo histories
 " jump to the last position when reopening a file
 autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" shortcuts
+" shortcuts {{{
 """""""""""""""""""""""""""""""
 
 let mapleader=' '
@@ -231,9 +235,10 @@ vmap > >gv
 " w!! let's you sudo after file was opened!
 cmap w!! w !sudo tee % >/dev/null
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" lightline
+" lightline {{{
 """""""""""""""""""""""""""""""
 
 let g:lightline = {}
@@ -304,9 +309,10 @@ let g:vimshell_force_overwrite_statusline = 0
 " Use autocmd to force lightline update.
 autocmd mygroup User CocStatusChange,CocDiagnosticChange call lightline#update()
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" fzf
+" fzf {{{
 """""""""""""""""""""""""""""""
 
 let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
@@ -337,9 +343,10 @@ let g:fzf_colors =
 autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
   \| autocmd mygroup BufLeave <buffer> set laststatus=2 showmode ruler
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" ale
+" ale {{{
 """""""""""""""""""""""""""""""
 
 " Keep gutter open
@@ -367,9 +374,10 @@ highlight ALEWarningSign guifg=yellow
 let g:ale_sign_error = '⛔'
 let g:ale_sign_warning = '🔔'
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" coc
+" coc {{{
 """""""""""""""""""""""""""""""
 
 let g:coc_global_extensions = ['coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
@@ -390,17 +398,19 @@ endfunction
 " Use `:Format` to format current buffer
 command! -nargs=0 CocFormat :call CocAction('format')
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" emmet
+" emmet {{{
 """""""""""""""""""""""""""""""
 
 let g:user_emmet_install_global = 0
 autocmd mygroup FileType html,css EmmetInstall
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" NERDTree
+" NERDTree {{{
 """""""""""""""""""""""""""""""
 
 let g:NERDTreeShowHidden = 1
@@ -425,9 +435,10 @@ let g:NERDTreeIndicatorMapCustom = {
                 \ 'Unknown'   : ''
                 \ }
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" Vista
+" Vista {{{
 """""""""""""""""""""""""""""""
 
 let g:vista_sidebar_width = 50
@@ -463,9 +474,10 @@ let g:vista#renderer#icons = {
 \   'variable': '\uf71b',
 \  }
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" tmux navigator
+" tmux navigator {{{
 """""""""""""""""""""""""""""""
 
 let g:tmux_navigator_no_mappings = 1
@@ -475,9 +487,10 @@ nnoremap <silent> <M-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <M-Down>  :TmuxNavigateDown<cr>
 nnoremap <silent> <M-Up>    :TmuxNavigateUp<cr>
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" CtrlSF
+" CtrlSF {{{
 """""""""""""""""""""""""""""""
 
 let g:ctrlsf_confirm_save = 0
@@ -490,9 +503,10 @@ let g:ctrlsf_auto_focus = {
     \ "at": "start"
     \ }
 
+"}}}
 
 """""""""""""""""""""""""""""""
-" Misc plugins
+" Misc plugins {{{
 """""""""""""""""""""""""""""""
 
 " ansible-vim
@@ -506,3 +520,4 @@ if has('nvim')
     lua require'colorizer'.setup()
 end
 
+"}}}
