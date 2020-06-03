@@ -43,7 +43,8 @@ call plug#begin('~/.vim/plugged')"{{{
     Plug 'arcticicestudio/nord-vim'
     Plug 'ayu-theme/ayu-vim'
     Plug 'rakr/vim-one'
-    Plug 'cocopon/iceberg.vim'
+    Plug 'gruvbox-community/gruvbox'
+    Plug 'shinchu/lightline-gruvbox.vim'
     Plug 'ryanoasis/vim-devicons'
 call plug#end()
 "}}}
@@ -62,8 +63,11 @@ if (has('termguicolors'))
     set termguicolors
 endif
 let ayucolor='mirage'
+set t_md=
+let g:gruvbox_italic = 0
 set background=dark
 colorscheme nord
+
 "}}}
 
 " misc settings {{{
@@ -267,7 +271,7 @@ let g:lightline.component_expand = {
 let g:lightline.component_function = {
     \ 'readonly': 'LightlineReadonly',
     \ 'fugitive': 'LightlineFugitive',
-	\ 'cocstatus': 'coc#status',
+    \ 'cocstatus': 'coc#status',
     \}
 let g:lightline.component_type = {
     \ 'buffers': 'tabsel',
@@ -500,7 +504,7 @@ let g:ctrlsf_default_root = 'project'
 
 " focus result pane right at the start
 let g:ctrlsf_auto_focus = {
-    \ "at": "start"
+    \ 'at': 'start'
     \ }
 
 "}}}
