@@ -76,7 +76,7 @@ set visualbell                  " flash screen, no beeping
 set t_vb=                       " no flash
 set noerrorbells                " don't ring bell for error messages
 set nojoinspaces                " insert only one space after sentences when joining lines
-set whichwrap=<,>,h,l,b         " allow specified keys that move the cursor left/right to move to the previous/next line
+set whichwrap+=<,>,h,l,[,]      " allow left/right arrow keys and h/l to move the cursor to the previous/next line
 set ruler                       " show the cursor position all the time
 set autowrite                   " automatically :write before running commands
 set showcmd                     " display incomplete commands
