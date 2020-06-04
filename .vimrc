@@ -65,8 +65,10 @@ endif
 let ayucolor='mirage'
 set t_md=
 let g:gruvbox_italic = 0
+let g:gruvbox_bold = 0
+let g:gruvbox_contrast_dark = 'medium' " soft/medium/hard
 set background=dark
-colorscheme nord
+colorscheme gruvbox
 
 "}}}
 
@@ -246,7 +248,7 @@ cmap w!! w !sudo tee % >/dev/null
 """""""""""""""""""""""""""""""
 
 let g:lightline = {}
-let g:lightline.colorscheme = 'nord'
+let g:lightline.colorscheme = 'gruvbox'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
 
 set showtabline=2
@@ -288,8 +290,8 @@ let g:lightline.active = {
     \}
 
 " use powerline/nerdfont symbols
-let g:lightline.separator = { 'left': '', 'right': '' }
-let g:lightline.subseparator = { 'left': '', 'right': '' }
+"let g:lightline.separator = { 'left': '', 'right': '' }
+"let g:lightline.subseparator = { 'left': '', 'right': '' }
 function! LightlineReadonly()
     return &readonly ? '' : ''
 endfunction
@@ -450,7 +452,7 @@ let g:vista_sidebar_width = 50
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious. e.g., more compact: ["▸ ", ""]
 " Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
-let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
+let g:vista_icon_ind = ['╰─▸ ', '├─▸ ']
 
 " Executive used when opening vista sidebar without specifying it.
 " See all the avaliable executives via `:echo g:vista#executives`.
