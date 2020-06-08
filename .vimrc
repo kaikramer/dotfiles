@@ -22,7 +22,6 @@ call plug#begin('~/.vim/plugged')"{{{
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-commentary'
-    Plug 'vim-scripts/ReplaceWithRegister'
     Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
@@ -241,6 +240,13 @@ vmap > >gv
 " w!! let's you sudo after file was opened!
 cmap w!! w !sudo tee % >/dev/null
 
+" reminders:
+" Ctrl-w Shift-l (-h/j/k) -> Move the current window to be at the far right, using the full height
+" Ctrl-w _ -> Maximize current window vertically
+" g Ctrl-a /-x in visual block mode -> increase numbers
+" gu/gU -> make lower/upper case
+
+
 "}}}
 
 """""""""""""""""""""""""""""""
@@ -291,6 +297,7 @@ let g:lightline.active = {
 
 " use powerline/nerdfont symbols
 "let g:lightline.separator = { 'left': '', 'right': '' }
+let g:lightline.separator = { 'left': ' ', 'right': ' ' }
 "let g:lightline.subseparator = { 'left': '', 'right': '' }
 function! LightlineReadonly()
     return &readonly ? '' : ''
