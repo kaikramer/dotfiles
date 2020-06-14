@@ -25,6 +25,7 @@ call plug#begin('~/.vim/plugged')"{{{
     Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
+    Plug 'liuchengxu/vim-which-key'
 
     " searching
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -194,11 +195,10 @@ nnoremap <silent> <leader>fg :GFiles<CR>
 nnoremap <silent> <leader>fh :Helptags<CR>
 nnoremap <silent> <leader>fl :Lines<CR>
 nnoremap <silent> <leader>fm :Marks<CR>
-nnoremap <silent> <leader>fo :Colors<CR>
 nnoremap <silent> <leader>fr :Rg<CR>
 
 " CtrlSF
-nnoremap <leader>r :CtrlSF --hidden<Space>
+nnoremap <leader>r :CtrlSF -hidden<Space>
 vmap <silent> <leader>r <Plug>CtrlSFVwordExec
 
 " miscellaneous mappings
@@ -216,9 +216,12 @@ nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 
 " CoC
 nnoremap <silent> gd <Plug>(coc-definition)  " use standard mapping for 'goto definition'
+nmap <silent> <leader>ca <Plug>(coc-codeaction)
 nnoremap <silent> <leader>cf :CocFormat<CR>
+xmap <silent> <leader>cf  <Plug>(coc-format-selected)
 nnoremap <silent> <leader>cd :call <SID>show_documentation()<CR>
 nnoremap <silent> <leader>co :call CocAction('runCommand', 'editor.action.organizeImport')
+nmap <silent> <leader>cq <Plug>(coc-fix-current)
 nmap <silent> <leader>cr <Plug>(coc-references)
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -240,12 +243,23 @@ vmap > >gv
 " w!! let's you sudo after file was opened!
 cmap w!! w !sudo tee % >/dev/null
 
+" terminal
+if has('nvim')
+    tnoremap <Esc> <C-\><C-n>
+    tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
+    tnoremap <A-h> <C-\><C-N><C-w>h
+    tnoremap <A-j> <C-\><C-N><C-w>j
+    tnoremap <A-k> <C-\><C-N><C-w>k
+    tnoremap <A-l> <C-\><C-N><C-w>l
+endif
+
 " reminders:
 " Ctrl-w Shift-l (-h/j/k) -> Move the current window to be at the far right, using the full height
 " Ctrl-w _ -> Maximize current window vertically
 " g Ctrl-a /-x in visual block mode -> increase numbers
 " gu/gU -> make lower/upper case
-
+" ]m/]M -> goto beginning/end of next function ([ for previous)
+" o -> switch between start/end of visual selection
 
 "}}}
 
@@ -519,6 +533,17 @@ let g:ctrlsf_auto_focus = {
 "}}}
 
 """""""""""""""""""""""""""""""
+" which-key {{{
+"""""""""""""""""""""""""""""""
+
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+
+" By default timeoutlen is 1000 ms
+set timeoutlen=500
+
+"}}}
+
+"""""""""""""""""""""""""""""""
 " Misc plugins {{{
 """""""""""""""""""""""""""""""
 
@@ -531,6 +556,6 @@ let g:peekaboo_window = 'vert bo 50new'
 " nvim-colorizer.lua
 if has('nvim')
     lua require'colorizer'.setup()
-end
+endif
 
 "}}}
