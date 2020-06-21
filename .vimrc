@@ -68,7 +68,7 @@ let g:gruvbox_italic = 0
 let g:gruvbox_bold = 0
 let g:gruvbox_contrast_dark = 'medium' " soft/medium/hard
 set background=dark
-colorscheme gruvbox
+colorscheme nord
 
 "}}}
 
@@ -268,7 +268,7 @@ endif
 """""""""""""""""""""""""""""""
 
 let g:lightline = {}
-let g:lightline.colorscheme = 'gruvbox'
+let g:lightline.colorscheme = 'nord'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
 
 set showtabline=2
