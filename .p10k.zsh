@@ -37,6 +37,8 @@
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
       #os_icon                 # os identifier
+      time                    # current time
+      command_execution_time  # duration of the last command
       context                 # user@hostname
       status                  # exit code of the last command
       background_jobs         # presence of background jobs
@@ -50,7 +52,6 @@
   # automatically hidden when the input line reaches it. Right prompt above the
   # last prompt line gets hidden if it would overlap with left prompt.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-      command_execution_time  # duration of the last command
       #direnv                  # direnv status (https://direnv.net/)
       #virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
       #anaconda                # conda environment (https://conda.io/)
@@ -81,7 +82,6 @@
       # vpn_ip                # virtual private network indicator
       # ram                   # free RAM
       # load                  # CPU load
-      time                    # current time
       # public_ip             # public IP address
       # proxy                 # system-wide http/https/ftp proxy
       # battery               # internal battery
@@ -949,13 +949,13 @@
   # Current time color.
   typeset -g POWERLEVEL9K_TIME_FOREGROUND=8
   # Format for the current time: 09:51:02. See `man 3 strftime`.
-  typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
+  typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M}'
   # If set to true, time will update when you hit enter. This way prompts for the past
   # commands will contain the start times of their commands as opposed to the default
   # behavior where they contain the end times of their preceding commands.
   typeset -g POWERLEVEL9K_TIME_UPDATE_ON_COMMAND=false
   # Custom icon.
-  #typeset -g POWERLEVEL9K_TIME_VISUAL_IDENTIFIER_EXPANSION=''
+  typeset -g POWERLEVEL9K_TIME_VISUAL_IDENTIFIER_EXPANSION=''
   # Custom prefix.
   #typeset -g POWERLEVEL9K_TIME_PREFIX='%246Fat '
 
