@@ -67,6 +67,7 @@ bindkey '^s' start_ssh_completion
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# expand after equal (e.g. x=~)
 set -o magicequalsubst
 
 # fzf-marks
