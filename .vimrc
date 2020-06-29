@@ -49,11 +49,11 @@ call plug#begin('~/.vim/plugged')"{{{
 call plug#end()
 "}}}
 
-" declare self-cleaning augroup and add all autocmds to that group later{{{
+" declare self-cleaning augroup and add all autocmds to that group later
 augroup mygroup
     autocmd!
 augroup end
-"}}}
+"
 
 " colors{{{
 syntax on
@@ -215,7 +215,7 @@ nnoremap <silent> <leader>nf :NERDTreeFind<CR>
 nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 
 " CoC
-nnoremap <silent> gd <Plug>(coc-definition)  " use standard mapping for 'goto definition'
+nmap <silent> gd <Plug>(coc-definition)  " use standard mapping for 'goto definition'
 nmap <silent> <leader>ca <Plug>(coc-codeaction)
 nnoremap <silent> <leader>cf :CocFormat<CR>
 xmap <silent> <leader>cf  <Plug>(coc-format-selected)
@@ -260,7 +260,10 @@ endif
 " gu/gU -> make lower/upper case
 " ]m/]M -> goto beginning/end of next function ([ for previous)
 " o -> switch between start/end of visual selection
-
+" g Ctrl-g -> Output selected lines/words/chars
+" :noh -> disable search highlight til next search
+" gi -> goto last insert position
+"
 "}}}
 
 """""""""""""""""""""""""""""""
@@ -394,6 +397,9 @@ endfunction
 
 " Fixers
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'javascript': ['prettier'], 'css': ['prettier'], 'html': ['html-beautify']}
+let g:ale_linters = {
+\   'c': ['clangd'],
+\}
 
 " Symbols and colors
 highlight ALEErrorSign guifg=red
@@ -497,8 +503,8 @@ let g:vista#renderer#enable_icon = 1
 
 " The default icons can't be suitable for all the filetypes, you can extend it as you wish.
 let g:vista#renderer#icons = {
-\   'function': '\uf794',
-\   'variable': '\uf71b',
+\   'function': '',
+\   'variable': 'x',
 \  }
 
 "}}}
