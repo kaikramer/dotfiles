@@ -1,6 +1,7 @@
 scriptencoding utf-8
 
-call plug#begin('~/.vim/plugged')"{{{
+call plug#begin('~/.vim/plugged')
+"{{{
     " syntax and language support
     Plug 'dense-analysis/ale'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -46,16 +47,15 @@ call plug#begin('~/.vim/plugged')"{{{
     Plug 'gruvbox-community/gruvbox'
     Plug 'shinchu/lightline-gruvbox.vim'
     Plug 'ryanoasis/vim-devicons'
-call plug#end()
 "}}}
+call plug#end()
 
 " declare self-cleaning augroup and add all autocmds to that group later
 augroup mygroup
     autocmd!
 augroup end
-"
 
-" colors{{{
+" colors
 syntax on
 if (has('termguicolors'))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -68,9 +68,7 @@ let g:gruvbox_italic = 0
 let g:gruvbox_bold = 0
 let g:gruvbox_contrast_dark = 'medium' " soft/medium/hard
 set background=dark
-colorscheme nord
-
-"}}}
+colorscheme one
 
 " misc settings {{{
 set fileencodings=utf-8,latin1  " auto detection of file encoding
@@ -177,9 +175,9 @@ autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | e
 "}}}
 
 """""""""""""""""""""""""""""""
-" shortcuts {{{
+" shortcuts
 """""""""""""""""""""""""""""""
-
+"{{{
 let mapleader=' '
 
 " switching between buffers
@@ -215,14 +213,14 @@ nnoremap <silent> <leader>nf :NERDTreeFind<CR>
 nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 
 " CoC
-nmap <silent> gd <Plug>(coc-definition)  " use standard mapping for 'goto definition'
+nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> <leader>ca <Plug>(coc-codeaction)
-nnoremap <silent> <leader>cf :CocFormat<CR>
 xmap <silent> <leader>cf  <Plug>(coc-format-selected)
-nnoremap <silent> <leader>cd :call <SID>show_documentation()<CR>
-nnoremap <silent> <leader>co :call CocAction('runCommand', 'editor.action.organizeImport')
 nmap <silent> <leader>cq <Plug>(coc-fix-current)
 nmap <silent> <leader>cr <Plug>(coc-references)
+nnoremap <silent> <leader>cf :CocFormat<CR>
+nnoremap <silent> <leader>cd :call <SID>show_documentation()<CR>
+nnoremap <silent> <leader>co :call CocAction('runCommand', 'editor.action.organizeImport')
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
@@ -267,9 +265,9 @@ endif
 "}}}
 
 """""""""""""""""""""""""""""""
-" lightline {{{
+" lightline
 """""""""""""""""""""""""""""""
-
+"{{{
 let g:lightline = {}
 let g:lightline.colorscheme = 'nord'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
@@ -342,9 +340,9 @@ autocmd mygroup User CocStatusChange,CocDiagnosticChange call lightline#update()
 "}}}
 
 """""""""""""""""""""""""""""""
-" fzf {{{
+" fzf
 """""""""""""""""""""""""""""""
-
+"{{{
 let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
 
 " Ignore filename for ripgrep
@@ -376,9 +374,9 @@ autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
 "}}}
 
 """""""""""""""""""""""""""""""
-" ale {{{
+" ale
 """""""""""""""""""""""""""""""
-
+"{{{
 " Keep gutter open
 let g:ale_sign_column_always = 1
 
@@ -410,9 +408,9 @@ let g:ale_sign_warning = '🔔'
 "}}}
 
 """""""""""""""""""""""""""""""
-" coc {{{
+" coc
 """""""""""""""""""""""""""""""
-
+"{{{
 let g:coc_global_extensions = ['coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
 
 function! s:check_back_space() abort
@@ -434,18 +432,17 @@ command! -nargs=0 CocFormat :call CocAction('format')
 "}}}
 
 """""""""""""""""""""""""""""""
-" emmet {{{
+" emmet
 """""""""""""""""""""""""""""""
 
 let g:user_emmet_install_global = 0
 autocmd mygroup FileType html,css EmmetInstall
 
-"}}}
 
 """""""""""""""""""""""""""""""
-" NERDTree {{{
+" NERDTree
 """""""""""""""""""""""""""""""
-
+"{{{
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeWinSize = 50
 let g:NERDTreeAutoDeleteBuffer = 1
@@ -471,9 +468,9 @@ let g:NERDTreeIndicatorMapCustom = {
 "}}}
 
 """""""""""""""""""""""""""""""
-" Vista {{{
+" Vista
 """""""""""""""""""""""""""""""
-
+"{{{
 let g:vista_sidebar_width = 50
 
 " How each level is indented and what to prepend.
@@ -510,7 +507,7 @@ let g:vista#renderer#icons = {
 "}}}
 
 """""""""""""""""""""""""""""""
-" tmux navigator {{{
+" tmux navigator
 """""""""""""""""""""""""""""""
 
 let g:tmux_navigator_no_mappings = 1
@@ -520,10 +517,9 @@ nnoremap <silent> <M-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <M-Down>  :TmuxNavigateDown<cr>
 nnoremap <silent> <M-Up>    :TmuxNavigateUp<cr>
 
-"}}}
 
 """""""""""""""""""""""""""""""
-" CtrlSF {{{
+" CtrlSF
 """""""""""""""""""""""""""""""
 
 let g:ctrlsf_confirm_save = 0
@@ -536,21 +532,17 @@ let g:ctrlsf_auto_focus = {
     \ 'at': 'start'
     \ }
 
-"}}}
-
 """""""""""""""""""""""""""""""
-" which-key {{{
+" which-key
 """""""""""""""""""""""""""""""
-
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 
 " By default timeoutlen is 1000 ms
 set timeoutlen=500
 
-"}}}
 
 """""""""""""""""""""""""""""""
-" Misc plugins {{{
+" Misc plugins
 """""""""""""""""""""""""""""""
 
 " ansible-vim
@@ -564,4 +556,3 @@ if has('nvim')
     lua require'colorizer'.setup()
 endif
 
-"}}}
