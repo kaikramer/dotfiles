@@ -52,9 +52,7 @@ fi
 # rename tmux window with ssh host
 ssh() {
     if env | grep -q "TMUX_PANE"; then
-        tmux rename-window "$*"
-        TERM=xterm-256color command ssh "$@"
-        tmux set-window-option automatic-rename "on" 1>/dev/null
+        tmux new-window -a -n "$*" "TERM=xterm-256color ssh $@"
     else
         TERM=xterm-256color command ssh "$@"
     fi
