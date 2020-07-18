@@ -49,7 +49,7 @@ if [[ -r ~/.ssh/config ]]; then
     zstyle ':completion:*:(ssh|scp):*' hosts $h
 fi
 
-# rename tmux window with ssh host
+# when ssh is called, open new tmux window and name it with ssh host
 ssh() {
     if env | grep -q "TMUX_PANE"; then
         tmux new-window -a -n "$*" "TERM=xterm-256color ssh $@"
@@ -57,6 +57,16 @@ ssh() {
         TERM=xterm-256color command ssh "$@"
     fi
 }
+
+# redefine SSH completion function and remove every source but ~/.ssh/config
+_fzf_complete_ssh() {
+  _fzf_complete +m -- "$@" < <(
+    setopt localoptions nonomatch
+    command cat <(cat ~/.ssh/config 2> /dev/null | command grep -i '^\s*host\(name\)\? ' | awk '{for (i = 2; i <= NF; i++) print $1 " " $i}' | command grep -v '[*?]') |
+        awk '{if (length($2) > 0) {print $2}}' | sort -u
+  )
+}
+
 
 # bind ssh completion to Ctrl-S
 start_ssh_completion () { LBUFFER="ssh **" ; fzf-completion }

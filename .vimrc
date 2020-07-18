@@ -3,7 +3,7 @@ scriptencoding utf-8
 call plug#begin('~/.vim/plugged')
 "{{{
     " syntax and language support
-    Plug 'dense-analysis/ale'
+    Plug 'dense-analysis/ale', {'on': 'ALEToggle'}
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'sheerun/vim-polyglot'
     Plug 'pearofducks/ansible-vim'
@@ -45,7 +45,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'ayu-theme/ayu-vim'
     Plug 'rakr/vim-one'
     Plug 'gruvbox-community/gruvbox'
-    Plug 'shinchu/lightline-gruvbox.vim'
     Plug 'ryanoasis/vim-devicons'
 "}}}
 call plug#end()
@@ -66,9 +65,9 @@ let ayucolor='mirage'
 set t_md=
 let g:gruvbox_italic = 0
 let g:gruvbox_bold = 0
-let g:gruvbox_contrast_dark = 'medium' " soft/medium/hard
+let g:gruvbox_contrast_dark = 'hard' " soft/medium/hard
 set background=dark
-colorscheme one
+colorscheme gruvbox
 
 " misc settings {{{
 set fileencodings=utf-8,latin1  " auto detection of file encoding
@@ -204,6 +203,7 @@ nnoremap <silent> <leader>qf :call QFixToggle()<CR>
 nnoremap <silent> <leader>qn :cnext<CR>
 nnoremap <silent> <leader>qp :cprevious<CR>
 nnoremap <silent> <leader>af :ALEFix<CR>
+nnoremap <silent> <leader>at :ALEToggle<CR>
 nnoremap <silent> <leader>ut :UndotreeShow<CR>
 nnoremap <silent> <leader>st :Vista!!<CR>
 
@@ -269,7 +269,7 @@ endif
 """""""""""""""""""""""""""""""
 "{{{
 let g:lightline = {}
-let g:lightline.colorscheme = 'nord'
+let g:lightline.colorscheme = 'gruvbox'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
 
 set showtabline=2
