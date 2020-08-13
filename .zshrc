@@ -52,7 +52,9 @@ fi
 # when ssh is called, open new tmux window and name it with ssh host
 ssh() {
     if env | grep -q "TMUX_PANE"; then
-        tmux new-window -a -n "$*" "TERM=xterm-256color ssh $@"
+        tmux rename-window "$*"
+        TERM=xterm-256color command ssh "$@"
+        tmux set-window-option automatic-rename "on" 1>/dev/null
     else
         TERM=xterm-256color command ssh "$@"
     fi
@@ -112,6 +114,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 alias la='ls -la'
 alias vi='nvim'
+alias n='nnn'
 alias fd='fd --hidden --no-ignore'
 
 alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
