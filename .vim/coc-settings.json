@@ -1,6 +1,4 @@
 {
-    "prettier.printWidth": 160,
-    "prettier.useTabs": false,
     "languageserver": {
         "groovy": {
             "command": "java",
