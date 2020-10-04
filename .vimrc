@@ -34,6 +34,11 @@ call plug#begin('~/.vim/plugged')
     Plug 'airblade/vim-rooter'
     Plug 'dyng/ctrlsf.vim'
 
+    " note taking and searching
+    Plug 'vimwiki/vimwiki'
+    Plug 'alok/notational-fzf-vim'
+    Plug 'ferrine/md-img-paste.vim'
+
     " status line
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline'
@@ -171,6 +176,9 @@ set undodir=$HOME/.vim/undo     " where to save undo histories
 " jump to the last position when reopening a file
 autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
+
+set grepprg=rg\ --vimgrep
+
 "}}}
 
 """""""""""""""""""""""""""""""
@@ -215,12 +223,13 @@ nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 " CoC
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> <leader>ca <Plug>(coc-codeaction)
-xmap <silent> <leader>cf  <Plug>(coc-format-selected)
 nmap <silent> <leader>cq <Plug>(coc-fix-current)
 nmap <silent> <leader>cr <Plug>(coc-references)
+xmap <silent> <leader>cf  <Plug>(coc-format-selected)
 nnoremap <silent> <leader>cf :CocFormat<CR>
 nnoremap <silent> <leader>cd :call <SID>show_documentation()<CR>
-nnoremap <silent> <leader>co :call CocAction('runCommand', 'editor.action.organizeImport')
+nnoremap <silent> <leader>ci :call CocAction('runCommand', 'editor.action.organizeImport')
+nnoremap <silent> <leader>co :CocList outline<CR>
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
@@ -241,8 +250,15 @@ vmap > >gv
 " w!! let's you sudo after file was opened!
 cmap w!! w !sudo tee % >/dev/null
 
+" note taking
+nnoremap <leader>e :NV<CR>
+nnoremap <silent> <leader>t :call CreateNewUnnamedNote()<CR>
+
 " terminal
 if has('nvim')
+    autocmd mygroup TermOpen * startinsert
+
+    nnoremap <silent> <leader>t :split<CR>:resize 10<CR>:terminal<CR>
     tnoremap <Esc> <C-\><C-n>
     tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
     tnoremap <A-h> <C-\><C-N><C-w>h
@@ -251,17 +267,6 @@ if has('nvim')
     tnoremap <A-l> <C-\><C-N><C-w>l
 endif
 
-" reminders:
-" Ctrl-w Shift-l (-h/j/k) -> Move the current window to be at the far right, using the full height
-" Ctrl-w _ -> Maximize current window vertically
-" g Ctrl-a /-x in visual block mode -> increase numbers
-" gu/gU -> make lower/upper case
-" ]m/]M -> goto beginning/end of next function ([ for previous)
-" o -> switch between start/end of visual selection
-" g Ctrl-g -> Output selected lines/words/chars
-" :noh -> disable search highlight til next search
-" gi -> goto last insert position
-"
 "}}}
 
 """""""""""""""""""""""""""""""
@@ -473,26 +478,11 @@ let g:NERDTreeIndicatorMapCustom = {
 "{{{
 let g:vista_sidebar_width = 50
 
-" How each level is indented and what to prepend.
-" This could make the display more compact or more spacious. e.g., more compact: ["▸ ", ""]
-" Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
-let g:vista_icon_ind = ['╰─▸ ', '├─▸ ']
-
 " Executive used when opening vista sidebar without specifying it.
-" See all the avaliable executives via `:echo g:vista#executives`.
 let g:vista_default_executive = 'coc'
-
-" Set the executive for some filetypes explicitly. Use the explicit executive
-" instead of the default one for these filetypes when using `:Vista` without
-" specifying the executive.
-let g:vista_executive_for = {
-  \ 'cpp': 'vim_lsp',
-  \ 'php': 'vim_lsp',
-  \ }
 
 " To enable fzf's preview window set g:vista_fzf_preview.
 " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
-" For example:
 let g:vista_fzf_preview = ['right:50%']
 
 " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
@@ -542,6 +532,24 @@ set timeoutlen=500
 
 
 """""""""""""""""""""""""""""""
+" vimwiki and notational fzf
+"""""""""""""""""""""""""""""""
+
+let g:vimwiki_list = [{'path': '~/Notes',
+                      \ 'syntax': 'markdown', 'ext': '.md',
+                      \ 'index': 'Wiki'}]
+let g:vimwiki_global_ext = 0
+
+let g:nv_search_paths = ['~/Notes']
+let g:nv_default_extension = '.md'
+let g:nv_create_note_key = 'ctrl-x'
+
+function! CreateNewUnnamedNote()
+    exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
+endfunction
+
+
+"""""""""""""""""""""""""""""""
 " Misc plugins
 """""""""""""""""""""""""""""""
 
@@ -555,4 +563,5 @@ let g:peekaboo_window = 'vert bo 50new'
 if has('nvim')
     lua require'colorizer'.setup()
 endif
+
 
