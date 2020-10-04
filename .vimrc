@@ -543,6 +543,10 @@ let g:vimwiki_global_ext = 0
 let g:nv_search_paths = ['~/Notes']
 let g:nv_default_extension = '.md'
 let g:nv_create_note_key = 'ctrl-x'
+let g:nv_use_short_pathnames = 0
+let g:nv_window_width = '100%'
+let g:nv_preview_direction = 'up'
+let g:nv_create_note_window = 'edit'
 
 function! CreateNewUnnamedNote()
     exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
