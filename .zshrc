@@ -117,6 +117,9 @@ alias vi='nvim'
 alias n='nnn'
 alias fd='fd --hidden --no-ignore'
 
+# show timestamps in history
+alias history='history -E' 
+
 alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
 alias sp='openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
 alias sl='openssl crl -noout -text -inform DER -in '
