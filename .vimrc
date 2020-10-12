@@ -102,6 +102,7 @@ set updatetime=300              " you will have bad experience for diagnostic me
 set signcolumn=yes              " always show signcolumns
 set autoindent                  " add indentation from current line for next line
 set cindent                     " indent lines after {, before } and after cinwords
+set scrolloff=1                 " scroll offset in lines
 
 if !has('nvim')
     set viminfo=%,'50,\"100,:100,n~/.viminfo
@@ -266,6 +267,11 @@ if has('nvim')
     tnoremap <A-k> <C-\><C-N><C-w>k
     tnoremap <A-l> <C-\><C-N><C-w>l
 endif
+
+" center line when searching
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
 
 "}}}
 
