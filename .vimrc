@@ -196,7 +196,7 @@ nnoremap <C-n> :bn<cr>
 nnoremap <silent> <leader>fa :Maps<CR>
 nnoremap <silent> <leader>fb :Buffers<CR>
 nnoremap <silent> <leader>fc :Commits<CR>
-nnoremap <silent> <leader>ff :FZF -m<CR>
+nnoremap <silent> <leader>ff :Files<CR>
 nnoremap <silent> <leader>fg :GFiles<CR>
 nnoremap <silent> <leader>fh :Helptags<CR>
 nnoremap <silent> <leader>fl :Lines<CR>

@@ -84,6 +84,9 @@ set -o magicequalsubst
 export FZF_MARKS_COLOR_LHS=32
 export FZF_MARKS_COLOR_RHS=34
 
+# bat color scheme
+export BAT_THEME="ansi-dark"
+
 # add some key bindings from oh-my-zsh
 bindkey '^[[1;5C' forward-word                        # [Ctrl-RightArrow] - move forward one word
 bindkey '^[[1;5D' backward-word                       # [Ctrl-LeftArrow] - move backward one word
