@@ -259,8 +259,11 @@ nnoremap <silent> <leader>t :call CreateNewUnnamedNote()<CR>
 if has('nvim')
     autocmd mygroup TermOpen * startinsert
 
+    " avoid interference of mapping esc for terminal with fzf
+    autocmd mygroup TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
+    autocmd mygroup FileType fzf tunmap <buffer> <Esc>
+
     nnoremap <silent> <leader>t :split<CR>:resize 10<CR>:terminal<CR>
-    tnoremap <Esc> <C-\><C-n>
     tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
     tnoremap <A-h> <C-\><C-N><C-w>h
     tnoremap <A-j> <C-\><C-N><C-w>j
@@ -360,7 +363,9 @@ let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 " You can set up fzf window using a Vim command (Neovim or latest Vim 8 required)
-let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
+
+let g:fzf_preview_window = 'right:60%'
 
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
