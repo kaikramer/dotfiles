@@ -7,7 +7,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'sheerun/vim-polyglot'
     Plug 'pearofducks/ansible-vim'
-    Plug 'mattn/emmet-vim'
 
     " side bars
     Plug 'scrooloose/nerdtree', {'on': ['NERDTreeFind', 'NERDTreeClose', 'NERDTreeToggle', 'NERDTreeRefreshRoot']}
@@ -23,6 +22,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-unimpaired'
     Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
@@ -34,7 +34,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'airblade/vim-rooter'
     Plug 'dyng/ctrlsf.vim'
 
-    " note taking and searching
+    " note taking
     Plug 'vimwiki/vimwiki'
     Plug 'alok/notational-fzf-vim'
     Plug 'ferrine/md-img-paste.vim'
@@ -102,7 +102,7 @@ set updatetime=300              " you will have bad experience for diagnostic me
 set signcolumn=yes              " always show signcolumns
 set autoindent                  " add indentation from current line for next line
 set cindent                     " indent lines after {, before } and after cinwords
-set scrolloff=1                 " scroll offset in lines
+set scrolloff=5                 " scroll offset in lines
 
 if !has('nvim')
     set viminfo=%,'50,\"100,:100,n~/.viminfo
@@ -147,6 +147,7 @@ set tabstop=4
 set shiftwidth=4
 
 autocmd mygroup Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd mygroup Filetype java setlocal nolist noexpandtab
 
 set history=100
 
@@ -177,8 +178,11 @@ set undodir=$HOME/.vim/undo     " where to save undo histories
 " jump to the last position when reopening a file
 autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
-
 set grepprg=rg\ --vimgrep
+
+" automatically open quickfix/location window after grep/make/lvimgrep etc.
+"autocmd mygroup QuickFixCmdPost [^l]* cwindow
+"autocmd mygroup QuickFixCmdPost l*    lwindow
 
 "}}}
 
@@ -208,9 +212,7 @@ nnoremap <leader>r :CtrlSF -hidden<Space>
 vmap <silent> <leader>r <Plug>CtrlSFVwordExec
 
 " miscellaneous mappings
-nnoremap <silent> <leader>qf :call QFixToggle()<CR>
-nnoremap <silent> <leader>qn :cnext<CR>
-nnoremap <silent> <leader>qp :cprevious<CR>
+nnoremap <silent> <leader>q :call QFixToggle()<CR>
 nnoremap <silent> <leader>af :ALEFix<CR>
 nnoremap <silent> <leader>at :ALEToggle<CR>
 nnoremap <silent> <leader>ut :UndotreeShow<CR>
@@ -223,13 +225,13 @@ nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 
 " CoC
 nmap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 nmap <silent> <leader>ca <Plug>(coc-codeaction)
 nmap <silent> <leader>cq <Plug>(coc-fix-current)
 nmap <silent> <leader>cr <Plug>(coc-references)
-xmap <silent> <leader>cf  <Plug>(coc-format-selected)
+xmap <silent> <leader>cf <Plug>(coc-format-selected)
 nnoremap <silent> <leader>cf :CocFormat<CR>
-nnoremap <silent> <leader>cd :call <SID>show_documentation()<CR>
-nnoremap <silent> <leader>ci :call CocAction('runCommand', 'editor.action.organizeImport')
+nnoremap <silent> <leader>ci :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
 nnoremap <silent> <leader>co :CocList outline<CR>
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -275,6 +277,13 @@ endif
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
+" use more accessible prefixes for vim-unimpaired
+nmap ö [
+nmap ä ]
+omap ö [
+omap ä ]
+xmap ö [
+xmap ä ]
 
 "}}}
 
@@ -427,7 +436,7 @@ let g:ale_sign_warning = '🔔'
 " coc
 """""""""""""""""""""""""""""""
 "{{{
-let g:coc_global_extensions = ['coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
+let g:coc_global_extensions = ['coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python','coc-java']
 
 function! s:check_back_space() abort
   let col = col('.') - 1
