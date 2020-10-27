@@ -231,7 +231,9 @@ nmap <silent> <leader>cq <Plug>(coc-fix-current)
 nmap <silent> <leader>cr <Plug>(coc-references)
 xmap <silent> <leader>cf <Plug>(coc-format-selected)
 nnoremap <silent> <leader>cf :CocFormat<CR>
-nnoremap <silent> <leader>ci :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+nnoremap <silent> <leader>ci :call CocAction('runCommand', 'editor.action.organizeImport')
+nnoremap <silent> <leader>cn :call CocAction('diagnosticNext')<CR>
+nnoremap <silent> <leader>cp :call CocAction('diagnosticPrevious')<CR>
 nnoremap <silent> <leader>co :CocList outline<CR>
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -255,7 +257,7 @@ cmap w!! w !sudo tee % >/dev/null
 
 " note taking
 nnoremap <leader>e :NV<CR>
-nnoremap <silent> <leader>t :call CreateNewUnnamedNote()<CR>
+nnoremap <silent> <leader>o :call CreateNewUnnamedNote()<CR>
 
 " terminal
 if has('nvim')
@@ -436,7 +438,7 @@ let g:ale_sign_warning = '🔔'
 " coc
 """""""""""""""""""""""""""""""
 "{{{
-let g:coc_global_extensions = ['coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python','coc-java']
+let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python','coc-java']
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -563,10 +565,12 @@ let g:vimwiki_global_ext = 0
 let g:nv_search_paths = ['~/Notes']
 let g:nv_default_extension = '.md'
 let g:nv_create_note_key = 'ctrl-x'
-let g:nv_use_short_pathnames = 0
-let g:nv_window_width = '100%'
-let g:nv_preview_direction = 'up'
 let g:nv_create_note_window = 'edit'
+let g:nv_use_short_pathnames = 1
+let g:nv_window_width = '100%'
+"let g:nv_window_command = ''
+let g:nv_preview_direction = 'right'
+let g:nv_preview_width = 40
 
 function! CreateNewUnnamedNote()
     exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
