@@ -23,10 +23,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-unimpaired'
-    Plug 'junegunn/vim-peekaboo'
+    "Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'liuchengxu/vim-which-key'
+    Plug 'svermeulen/vim-cutlass'
+    Plug 'svermeulen/vim-yoink'
 
     " searching
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -102,6 +104,7 @@ set signcolumn=yes              " always show signcolumns
 set autoindent                  " add indentation from current line for next line
 set cindent                     " indent lines after {, before } and after cinwords
 set scrolloff=5                 " scroll offset in lines
+set clipboard=unnamed
 
 if !has('nvim')
     set viminfo=%,'50,\"100,:100,n~/.viminfo
@@ -229,14 +232,15 @@ nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 nmap <silent> <leader>ca <Plug>(coc-codeaction)
+nmap <silent> <leader>ci <Plug>(coc-implementation)
 nmap <silent> <leader>cq <Plug>(coc-fix-current)
 nmap <silent> <leader>cr <Plug>(coc-references)
 xmap <silent> <leader>cf <Plug>(coc-format-selected)
 nnoremap <silent> <leader>cf :CocFormat<CR>
-nnoremap <silent> <leader>ci :call CocAction('runCommand', 'editor.action.organizeImport')
+nnoremap <silent> <leader>co :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
 nnoremap <silent> <leader>cn :call CocAction('diagnosticNext')<CR>
 nnoremap <silent> <leader>cp :call CocAction('diagnosticPrevious')<CR>
-nnoremap <silent> <leader>co :CocList outline<CR>
+"nnoremap <silent> <leader>co :CocList outline<CR>
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
@@ -260,6 +264,9 @@ cmap w!! w !sudo tee % >/dev/null
 " note taking
 nnoremap <leader>e :NV<CR>
 nnoremap <silent> <leader>o :call CreateNewUnnamedNote()<CR>
+
+" remove trailing whitespace (from https://vim.fandom.com/wiki/Remove_unwanted_spaces)
+nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 " terminal
 if has('nvim')
@@ -572,6 +579,26 @@ let g:nv_preview_width = 40
 function! CreateNewUnnamedNote()
     exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
 endfunction
+
+
+"""""""""""""""""""""""""""""""
+" Cutlass and Yoink
+"""""""""""""""""""""""""""""""
+
+" use x for cut
+nnoremap x d
+xnoremap x d
+nnoremap xx dd
+nnoremap X D
+
+" mappings for yoink (overwrite decode c of vim-unimpaired)
+nmap äy <plug>(YoinkPostPasteSwapBack)
+nmap öy <plug>(YoinkPostPasteSwapForward)
+nmap p <plug>(YoinkPaste_p)
+nmap P <plug>(YoinkPaste_P)
+
+" required for cut to work
+let g:yoinkIncludeDeleteOperations=1
 
 
 """""""""""""""""""""""""""""""
