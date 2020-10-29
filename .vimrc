@@ -3,7 +3,6 @@ scriptencoding utf-8
 "{{{ plugins
 call plug#begin('~/.vim/plugged')
     " syntax and language support
-    Plug 'dense-analysis/ale', {'on': 'ALEToggle'}
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'sheerun/vim-polyglot'
     Plug 'pearofducks/ansible-vim'
@@ -43,7 +42,6 @@ call plug#begin('~/.vim/plugged')
     " status line
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline'
-    Plug 'maximbaz/lightline-ale'
 
     " colors and icons
     Plug 'norcalli/nvim-colorizer.lua'
@@ -190,6 +188,16 @@ set grepprg=rg\ --vimgrep
 "autocmd mygroup QuickFixCmdPost [^l]* cwindow
 "autocmd mygroup QuickFixCmdPost l*    lwindow
 
+function! QFixToggle()
+  if exists('g:qfix_win')
+    cclose
+    unlet g:qfix_win
+  else
+    copen 15
+    let g:qfix_win = bufnr('$')
+  endif
+endfunction
+
 "}}}
 
 "{{{ shortcuts
@@ -220,8 +228,6 @@ vmap <silent> <leader>r <Plug>CtrlSFVwordExec
 
 " miscellaneous mappings
 nnoremap <silent> <leader>q :call QFixToggle()<CR>
-nnoremap <silent> <leader>af :ALEFix<CR>
-nnoremap <silent> <leader>at :ALEToggle<CR>
 nnoremap <silent> <leader>ut :UndotreeShow<CR>
 nnoremap <silent> <leader>st :Vista!!<CR>
 
@@ -322,11 +328,6 @@ let g:lightline.component = {
      \}
 let g:lightline.component_expand = {
     \ 'buffers': 'lightline#bufferline#buffers',
-    \ 'linter_checking': 'lightline#ale#checking',
-    \ 'linter_infos': 'lightline#ale#infos',
-    \ 'linter_warnings': 'lightline#ale#warnings',
-    \ 'linter_errors': 'lightline#ale#errors',
-    \ 'linter_ok': 'lightline#ale#ok',
     \}
 let g:lightline.component_function = {
     \ 'readonly': 'LightlineReadonly',
@@ -361,11 +362,6 @@ function! LightlineFugitive()
     endif
     return ''
 endfunction
-
-let g:lightline#ale#indicator_checking = ''
-let g:lightline#ale#indicator_warnings = '🔔'
-let g:lightline#ale#indicator_errors = '⛔'
-let g:lightline#ale#indicator_ok = ''
 
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
@@ -409,40 +405,6 @@ let g:fzf_colors =
 " Hide statusline
 autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
   \| autocmd mygroup BufLeave <buffer> set laststatus=2 showmode ruler
-
-"}}}
-
-"{{{ ale
-"""""""""""""""""""""""""""""""
-" ale
-"""""""""""""""""""""""""""""""
-" Keep gutter open
-let g:ale_sign_column_always = 1
-
-" Use quickfix list instead of loclist
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-function! QFixToggle()
-  if exists('g:qfix_win')
-    cclose
-    unlet g:qfix_win
-  else
-    copen 15
-    let g:qfix_win = bufnr('$')
-  endif
-endfunction
-
-" Fixers
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'javascript': ['prettier'], 'css': ['prettier'], 'html': ['html-beautify']}
-let g:ale_linters = {
-\   'c': ['clangd'],
-\}
-
-" Symbols and colors
-highlight ALEErrorSign guifg=red
-highlight ALEWarningSign guifg=yellow
-let g:ale_sign_error = '⛔'
-let g:ale_sign_warning = '🔔'
 
 "}}}
 
