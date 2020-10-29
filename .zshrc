@@ -14,6 +14,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # Optimize slow compinit by only calling it once per day (see https://gist.github.com/ctechols/ca1035271ad134841284#gistcomment-2894219)
+# To manually rebuild the cache of executable commands, use command 'rehash'
 _zicompinit_custom() {
   setopt extendedglob local_options
   autoload -Uz compinit
