@@ -1,7 +1,7 @@
 scriptencoding utf-8
 
+"{{{ plugins
 call plug#begin('~/.vim/plugged')
-"{{{
     " syntax and language support
     Plug 'dense-analysis/ale', {'on': 'ALEToggle'}
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -52,15 +52,16 @@ call plug#begin('~/.vim/plugged')
     Plug 'rakr/vim-one'
     Plug 'gruvbox-community/gruvbox'
     Plug 'ryanoasis/vim-devicons'
-"}}}
 call plug#end()
+"}}}
 
-" declare self-cleaning augroup and add all autocmds to that group later
+" {{{ self-cleaning augroup
 augroup mygroup
     autocmd!
 augroup end
+"}}}
 
-" colors
+" {{{ colors
 syntax on
 if (has('termguicolors'))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -74,6 +75,7 @@ let g:gruvbox_bold = 0
 let g:gruvbox_contrast_dark = 'hard' " soft/medium/hard
 set background=dark
 colorscheme gruvbox
+" }}}
 
 " misc settings {{{
 set fileencodings=utf-8,latin1  " auto detection of file encoding
@@ -190,10 +192,10 @@ set grepprg=rg\ --vimgrep
 
 "}}}
 
+"{{{ shortcuts
 """""""""""""""""""""""""""""""
 " shortcuts
 """""""""""""""""""""""""""""""
-"{{{
 let mapleader=' '
 
 " switching between buffers
@@ -252,7 +254,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
-nnoremap <silent> <leader>v :edit ~/.vimrc<CR>
+" open vimrc
+nnoremap <silent> <leader>v :vsp ~/.vimrc<CR>
 
 " Indent and keep selection
 vmap < <gv
@@ -298,10 +301,10 @@ xmap ä ]
 
 "}}}
 
+"{{{ lightline
 """""""""""""""""""""""""""""""
 " lightline
 """""""""""""""""""""""""""""""
-"{{{
 let g:lightline = {}
 let g:lightline.colorscheme = 'gruvbox'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
@@ -373,10 +376,10 @@ autocmd mygroup User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 "}}}
 
+"{{{ fzf
 """""""""""""""""""""""""""""""
 " fzf
 """""""""""""""""""""""""""""""
-"{{{
 let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
 
 " Ignore filename for ripgrep
@@ -409,10 +412,10 @@ autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
 
 "}}}
 
+"{{{ ale
 """""""""""""""""""""""""""""""
 " ale
 """""""""""""""""""""""""""""""
-"{{{
 " Keep gutter open
 let g:ale_sign_column_always = 1
 
@@ -443,10 +446,10 @@ let g:ale_sign_warning = '🔔'
 
 "}}}
 
+"{{{ coc
 """""""""""""""""""""""""""""""
 " coc
 """""""""""""""""""""""""""""""
-"{{{
 let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python','coc-java']
 
 function! s:check_back_space() abort
@@ -467,18 +470,10 @@ command! -nargs=0 CocFormat :call CocAction('format')
 
 "}}}
 
-"""""""""""""""""""""""""""""""
-" emmet
-"""""""""""""""""""""""""""""""
-
-let g:user_emmet_install_global = 0
-autocmd mygroup FileType html,css EmmetInstall
-
-
+"{{{ NERDTree
 """""""""""""""""""""""""""""""
 " NERDTree
 """""""""""""""""""""""""""""""
-"{{{
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeWinSize = 50
 let g:NERDTreeAutoDeleteBuffer = 1
@@ -503,10 +498,10 @@ let g:NERDTreeIndicatorMapCustom = {
 
 "}}}
 
+"{{{ vista
 """""""""""""""""""""""""""""""
 " Vista
 """""""""""""""""""""""""""""""
-"{{{
 let g:vista_sidebar_width = 50
 
 " Executive used when opening vista sidebar without specifying it.
@@ -527,6 +522,7 @@ let g:vista#renderer#icons = {
 
 "}}}
 
+" {{{ tmux navigator
 """""""""""""""""""""""""""""""
 " tmux navigator
 """""""""""""""""""""""""""""""
@@ -537,8 +533,9 @@ nnoremap <silent> <M-Left>  :TmuxNavigateLeft<cr>
 nnoremap <silent> <M-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <M-Down>  :TmuxNavigateDown<cr>
 nnoremap <silent> <M-Up>    :TmuxNavigateUp<cr>
+" }}}
 
-
+"{{{ CtrlSF
 """""""""""""""""""""""""""""""
 " CtrlSF
 """""""""""""""""""""""""""""""
@@ -552,7 +549,9 @@ let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_auto_focus = {
     \ 'at': 'start'
     \ }
+"}}}
 
+" {{{ which-key
 """""""""""""""""""""""""""""""
 " which-key
 """""""""""""""""""""""""""""""
@@ -560,8 +559,9 @@ nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 
 " By default timeoutlen is 1000 ms
 set timeoutlen=500
+"}}}
 
-
+" {{{ notational fzf
 """""""""""""""""""""""""""""""
 " notational fzf
 """""""""""""""""""""""""""""""
@@ -579,8 +579,9 @@ let g:nv_preview_width = 40
 function! CreateNewUnnamedNote()
     exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
 endfunction
+" }}}
 
-
+" {{{ cutlass and yoink
 """""""""""""""""""""""""""""""
 " Cutlass and Yoink
 """""""""""""""""""""""""""""""
@@ -600,7 +601,9 @@ nmap P <plug>(YoinkPaste_P)
 " required for cut to work
 let g:yoinkIncludeDeleteOperations=1
 
+"}}}
 
+"{{{ misc plugins
 """""""""""""""""""""""""""""""
 " Misc plugins
 """""""""""""""""""""""""""""""
@@ -616,4 +619,4 @@ if has('nvim')
     lua require'colorizer'.setup()
 endif
 
-
+" }}}
