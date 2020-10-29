@@ -35,7 +35,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'dyng/ctrlsf.vim'
 
     " note taking
-    Plug 'vimwiki/vimwiki'
     Plug 'alok/notational-fzf-vim'
     Plug 'ferrine/md-img-paste.vim'
 
@@ -146,7 +145,9 @@ set shiftround                  " round indent to multiple of 'shiftwidth'
 set tabstop=4
 set shiftwidth=4
 
+" filetype specific settings
 autocmd mygroup Filetype c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd mygroup Filetype markdown setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd mygroup Filetype java setlocal nolist noexpandtab
 
 set history=100
@@ -200,6 +201,7 @@ nnoremap <C-n> :bn<cr>
 nnoremap <silent> <leader>fa :Maps<CR>
 nnoremap <silent> <leader>fb :Buffers<CR>
 nnoremap <silent> <leader>fc :Commits<CR>
+nnoremap <silent> <leader>g  :Files<CR>
 nnoremap <silent> <leader>ff :Files<CR>
 nnoremap <silent> <leader>fg :GFiles<CR>
 nnoremap <silent> <leader>fh :Helptags<CR>
@@ -554,13 +556,8 @@ set timeoutlen=500
 
 
 """""""""""""""""""""""""""""""
-" vimwiki and notational fzf
+" notational fzf
 """""""""""""""""""""""""""""""
-
-let g:vimwiki_list = [{'path': '~/Notes',
-                      \ 'syntax': 'markdown', 'ext': '.md',
-                      \ 'index': 'Wiki'}]
-let g:vimwiki_global_ext = 0
 
 let g:nv_search_paths = ['~/Notes']
 let g:nv_default_extension = '.md'
