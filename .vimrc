@@ -27,7 +27,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'liuchengxu/vim-which-key'
     Plug 'svermeulen/vim-cutlass'
-    Plug 'svermeulen/vim-yoink'
 
     " searching
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -305,6 +304,12 @@ omap ä ]
 xmap ö [
 xmap ä ]
 
+" together with cutlass use x for cut
+nnoremap x d
+xnoremap x d
+nnoremap xx dd
+nnoremap X D
+
 "}}}
 
 "{{{ lightline
@@ -532,7 +537,7 @@ let g:nv_search_paths = ['~/Notes']
 let g:nv_default_extension = '.md'
 let g:nv_create_note_key = 'ctrl-x'
 let g:nv_create_note_window = 'edit'
-let g:nv_use_short_pathnames = 1
+let g:nv_use_short_pathnames = 0
 let g:nv_window_width = '100%'
 "let g:nv_window_command = ''
 let g:nv_preview_direction = 'right'
@@ -542,28 +547,6 @@ function! CreateNewUnnamedNote()
     exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
 endfunction
 " }}}
-
-" {{{ cutlass and yoink
-"""""""""""""""""""""""""""""""
-" Cutlass and Yoink
-"""""""""""""""""""""""""""""""
-
-" use x for cut
-nnoremap x d
-xnoremap x d
-nnoremap xx dd
-nnoremap X D
-
-" mappings for yoink (overwrite decode c of vim-unimpaired)
-nmap äy <plug>(YoinkPostPasteSwapBack)
-nmap öy <plug>(YoinkPostPasteSwapForward)
-nmap p <plug>(YoinkPaste_p)
-nmap P <plug>(YoinkPaste_P)
-
-" required for cut to work
-let g:yoinkIncludeDeleteOperations=1
-
-"}}}
 
 "{{{ misc plugins
 """""""""""""""""""""""""""""""
