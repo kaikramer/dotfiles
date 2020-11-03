@@ -142,6 +142,7 @@ alias glo='git log --oneline --decorate'
 alias gm='git merge'
 alias gp='git push'
 alias gst='git status'
+alias gco='git checkout'
 
 #alias ssh='TERM=xterm-256color ssh' -> integrated in ssh() function above
 
