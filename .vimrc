@@ -417,7 +417,7 @@ autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
 """""""""""""""""""""""""""""""
 " coc
 """""""""""""""""""""""""""""""
-let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python','coc-java']
+let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
 
 function! s:check_back_space() abort
   let col = col('.') - 1
