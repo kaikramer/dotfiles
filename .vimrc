@@ -22,6 +22,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-unimpaired'
+    Plug 'tpope/vim-vinegar'
     "Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
@@ -178,6 +179,13 @@ let &runtimepath.=','.vimDir
 set undofile                    " Save undos after file closes
 set undodir=$HOME/.vim/undo     " where to save undo histories
 
+" netrw
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
+let g:netrw_browse_split = 4    " open file in previous window
+let g:netrw_liststyle = 3       " tree list view
+let g:netrw_altv = 1            " change from left splitting to right splitting
+
 " jump to the last position when reopening a file
 autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
@@ -201,12 +209,10 @@ endfunction
 
 "{{{ shortcuts
 """""""""""""""""""""""""""""""
-" shortcuts
-"""""""""""""""""""""""""""""""
 let mapleader=' '
 
 " switching between buffers
-nnoremap <C-b> :bp<cr>
+nnoremap <C-p> :bp<cr>
 nnoremap <C-n> :bn<cr>
 
 " map a few common things to do with FZF
@@ -314,8 +320,6 @@ nnoremap X D
 
 "{{{ lightline
 """""""""""""""""""""""""""""""
-" lightline
-"""""""""""""""""""""""""""""""
 let g:lightline = {}
 let g:lightline.colorscheme = 'gruvbox'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 1 }
@@ -379,8 +383,6 @@ autocmd mygroup User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 "{{{ fzf
 """""""""""""""""""""""""""""""
-" fzf
-"""""""""""""""""""""""""""""""
 let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
 
 " Ignore filename for ripgrep
@@ -415,8 +417,6 @@ autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
 
 "{{{ coc
 """""""""""""""""""""""""""""""
-" coc
-"""""""""""""""""""""""""""""""
 let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
 
 function! s:check_back_space() abort
@@ -438,8 +438,6 @@ command! -nargs=0 CocFormat :call CocAction('format')
 "}}}
 
 "{{{ NERDTree
-"""""""""""""""""""""""""""""""
-" NERDTree
 """""""""""""""""""""""""""""""
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeWinSize = 50
@@ -467,8 +465,6 @@ let g:NERDTreeIndicatorMapCustom = {
 
 "{{{ vista
 """""""""""""""""""""""""""""""
-" Vista
-"""""""""""""""""""""""""""""""
 let g:vista_sidebar_width = 50
 
 " Executive used when opening vista sidebar without specifying it.
@@ -491,8 +487,6 @@ let g:vista#renderer#icons = {
 
 " {{{ tmux navigator
 """""""""""""""""""""""""""""""
-" tmux navigator
-"""""""""""""""""""""""""""""""
 
 let g:tmux_navigator_no_mappings = 1
 
@@ -503,8 +497,6 @@ nnoremap <silent> <M-Up>    :TmuxNavigateUp<cr>
 " }}}
 
 "{{{ CtrlSF
-"""""""""""""""""""""""""""""""
-" CtrlSF
 """""""""""""""""""""""""""""""
 
 let g:ctrlsf_confirm_save = 0
@@ -520,8 +512,6 @@ let g:ctrlsf_auto_focus = {
 
 " {{{ which-key
 """""""""""""""""""""""""""""""
-" which-key
-"""""""""""""""""""""""""""""""
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 
 " By default timeoutlen is 1000 ms
@@ -529,8 +519,6 @@ set timeoutlen=500
 "}}}
 
 " {{{ notational fzf
-"""""""""""""""""""""""""""""""
-" notational fzf
 """""""""""""""""""""""""""""""
 
 let g:nv_search_paths = ['~/Notes']
@@ -549,8 +537,6 @@ endfunction
 " }}}
 
 "{{{ misc plugins
-"""""""""""""""""""""""""""""""
-" Misc plugins
 """""""""""""""""""""""""""""""
 
 " ansible-vim
