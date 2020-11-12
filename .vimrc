@@ -119,7 +119,11 @@ nnoremap <Del> "_x
 set relativenumber
 set number
 set numberwidth=4
-set cursorline
+
+" better performance
+set nocursorline                " scrolling is faster without cursorline
+set lazyredraw                  " do not update screen while executing macros etc.
+set ttyfast                     " only for vim (removed in neovim)
 
 " more intuitive splits
 set splitright
