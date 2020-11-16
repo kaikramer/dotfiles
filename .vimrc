@@ -33,11 +33,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'airblade/vim-rooter'
-    Plug 'dyng/ctrlsf.vim'
-
-    " note taking
-    Plug 'alok/notational-fzf-vim'
-    Plug 'ferrine/md-img-paste.vim'
+    "Plug 'dyng/ctrlsf.vim'
 
     " status line
     Plug 'itchyny/lightline.vim'
@@ -184,10 +180,10 @@ set undofile                    " Save undos after file closes
 set undodir=$HOME/.vim/undo     " where to save undo histories
 
 " netrw
-let g:netrw_banner = 0
+let g:netrw_banner = 1
 let g:netrw_winsize = 25
 let g:netrw_browse_split = 4    " open file in previous window
-let g:netrw_liststyle = 3       " tree list view
+let g:netrw_liststyle = 1       " wide list view
 let g:netrw_altv = 1            " change from left splitting to right splitting
 
 " jump to the last position when reopening a file
@@ -229,21 +225,17 @@ nnoremap <silent> <leader>fg :GFiles<CR>
 nnoremap <silent> <leader>fh :Helptags<CR>
 nnoremap <silent> <leader>fl :Lines<CR>
 nnoremap <silent> <leader>fm :Marks<CR>
-nnoremap <silent> <leader>fr :Rg<CR>
+nnoremap <silent> <leader>r  :Rg<CR>
 
 " CtrlSF
-nnoremap <leader>r :CtrlSF -hidden<Space>
-vmap <silent> <leader>r <Plug>CtrlSFVwordExec
+" nnoremap <leader>r :CtrlSF -hidden<Space>
+" vmap <silent> <leader>r <Plug>CtrlSFVwordExec
 
 " miscellaneous mappings
 nnoremap <silent> <leader>q :call QFixToggle()<CR>
 nnoremap <silent> <leader>ut :UndotreeShow<CR>
 nnoremap <silent> <leader>st :Vista!!<CR>
-
-" NERDTree
-nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
-nnoremap <silent> <leader>nf :NERDTreeFind<CR>
-nnoremap <silent> <leader>nc :bp<cr>:bd #<cr>
+nnoremap <silent> <leader>n :call OpenNotes()<CR>
 
 " CoC
 nmap <silent> gd <Plug>(coc-definition)
@@ -522,22 +514,23 @@ nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 set timeoutlen=500
 "}}}
 
-" {{{ notational fzf
+" {{{ notes
 """""""""""""""""""""""""""""""
-
-let g:nv_search_paths = ['~/Notes']
-let g:nv_default_extension = '.md'
-let g:nv_create_note_key = 'ctrl-x'
-let g:nv_create_note_window = 'edit'
-let g:nv_use_short_pathnames = 0
-let g:nv_window_width = '100%'
-"let g:nv_window_command = ''
-let g:nv_preview_direction = 'right'
-let g:nv_preview_width = 40
 
 function! CreateNewUnnamedNote()
     exec 'edit '.strftime("~/Notes/%Y-%m-%d_%H-%M-%S.md")
 endfunction
+
+function! OpenNotes()
+    cd ~/Notes
+    let g:netrw_banner = 1
+    let g:netrw_sort_by = "time"
+    let g:netrw_sort_direction = "reverse"
+    leftabove vsplit
+    vertical resize 50
+    e.
+endfunction
+
 " }}}
 
 "{{{ misc plugins
