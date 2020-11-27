@@ -276,7 +276,7 @@ nnoremap <leader>e :NV<CR>
 nnoremap <silent> <leader>o :call CreateNewUnnamedNote()<CR>
 
 " remove trailing whitespace (from https://vim.fandom.com/wiki/Remove_unwanted_spaces)
-nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :%s/\r//ge <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 " terminal
 if has('nvim')
@@ -382,7 +382,7 @@ autocmd mygroup User CocStatusChange,CocDiagnosticChange call lightline#update()
 let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
 
 " Ignore filename for ripgrep
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
 
 " You can set up fzf window using a Vim command (Neovim or latest Vim 8 required)
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
