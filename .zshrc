@@ -121,6 +121,9 @@ alias vi='nvim'
 alias n='nnn'
 alias fd='fd --hidden --no-ignore'
 
+# make directory changes faster
+alias mc='mc -u'
+
 # show timestamps in history
 alias history='history -E' 
 

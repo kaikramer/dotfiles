@@ -3,6 +3,7 @@ scriptencoding utf-8
 "{{{ plugins
 call plug#begin('~/.vim/plugged')
     " syntax and language support
+    Plug 'dense-analysis/ale'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'sheerun/vim-polyglot'
     Plug 'pearofducks/ansible-vim'
@@ -12,6 +13,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'Xuyuanp/nerdtree-git-plugin'
     Plug 'liuchengxu/vista.vim'
     Plug 'mbbill/undotree'
+    Plug 'mcchrish/nnn.vim'
 
     " git
     Plug 'airblade/vim-gitgutter'
@@ -38,6 +40,7 @@ call plug#begin('~/.vim/plugged')
     " status line
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline'
+    "Plug 'maximbaz/lightline-ale'
 
     " colors and icons
     Plug 'norcalli/nvim-colorizer.lua'
@@ -235,7 +238,15 @@ nnoremap <silent> <leader>r  :Rg<CR>
 nnoremap <silent> <leader>q :call QFixToggle()<CR>
 nnoremap <silent> <leader>ut :UndotreeShow<CR>
 nnoremap <silent> <leader>st :Vista!!<CR>
+nnoremap <silent> <leader>m :w <Bar> :make<CR>
 nnoremap <silent> <leader>n :call OpenNotes()<CR>
+xnoremap <leader>b :!boxes -d shell -s 50 -pa1<CR>
+
+" ALE
+"nnoremap <silent> <leader>at :ALEToggle<CR>
+"nnoremap <silent> <leader>al :ALELint<CR>
+"nnoremap <silent> <leader>an :ALENext<CR>
+"nnoremap <silent> <leader>ap :ALEPrevious<CR>
 
 " CoC
 nmap <silent> gd <Plug>(coc-definition)
@@ -333,6 +344,9 @@ let g:lightline.component = {
      \}
 let g:lightline.component_expand = {
     \ 'buffers': 'lightline#bufferline#buffers',
+    \ 'linter_checking': 'lightline#ale#checking',
+    \ 'linter_warnings': 'lightline#ale#warnings',
+    \ 'linter_errors': 'lightline#ale#errors',
     \}
 let g:lightline.component_function = {
     \ 'readonly': 'LightlineReadonly',
@@ -342,21 +356,20 @@ let g:lightline.component_function = {
 let g:lightline.component_type = {
     \ 'buffers': 'tabsel',
     \ 'linter_checking': 'right',
-    \ 'linter_infos': 'right',
     \ 'linter_warnings': 'warning',
     \ 'linter_errors': 'error',
-    \ 'linter_ok': 'right',
     \}
 
 let g:lightline.active = {
     \ 'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'absolutepath', 'modified' ] ],
-    \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'cocstatus' ], [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+    \ 'right': [ [ 'cocstatus'],
+    \            [ 'linter_checking', 'linter_errors', 'linter_warnings'],
+    \            [ 'lineinfo' ],
+    \            [ 'fileformat', 'fileencoding', 'filetype' ] ]
     \}
 
 " use powerline/nerdfont symbols
-"let g:lightline.separator = { 'left': '', 'right': '' }
 let g:lightline.separator = { 'left': ' ', 'right': ' ' }
-"let g:lightline.subseparator = { 'left': '', 'right': '' }
 function! LightlineReadonly()
     return &readonly ? '' : ''
 endfunction
@@ -367,6 +380,10 @@ function! LightlineFugitive()
     endif
     return ''
 endfunction
+
+let g:lightline#ale#indicator_checking = ''
+let g:lightline#ale#indicator_warnings = '🔔'
+let g:lightline#ale#indicator_errors = '✘'
 
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
@@ -408,6 +425,32 @@ let g:fzf_colors =
 " Hide statusline
 autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
   \| autocmd mygroup BufLeave <buffer> set laststatus=2 showmode ruler
+
+"}}}
+
+"{{{ ale
+"""""""""""""""""""""""""""""""
+" ale
+"""""""""""""""""""""""""""""""
+" Keep gutter open
+"let g:ale_sign_column_always = 1
+
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+
+let g:ale_set_highlights = 0
+
+" Only run linters named in ale_linters settings.
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+\   'ansible': ['ansible_lint']
+\}
+
+" Symbols and colors
+highlight clear ALEErrorSign guifg=red
+highlight clear ALEWarningSign guifg=yellow
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '🔔'
 
 "}}}
 
@@ -526,18 +569,32 @@ function! OpenNotes()
     let g:netrw_banner = 1
     let g:netrw_sort_by = "time"
     let g:netrw_sort_direction = "reverse"
-    leftabove vsplit
-    vertical resize 50
-    e.
+    "leftabove vsplit
+    "vertical resize 50
+    "e.
+    call nnn#pick()
+    " sort by time
+    call feedkeys("tt")
 endfunction
 
 " }}}
+
+"{{{ nnn
+"""""""""""""""""""""""""""""""
+
+let g:nnn#set_default_mappings = 0
+"let g:nnn#command = 'nnn -d'
+let g:nnn#layout = { 'left': '40' } " or right, up, down
+
+"}}}
 
 "{{{ misc plugins
 """""""""""""""""""""""""""""""
 
 " ansible-vim
 autocmd mygroup BufRead,BufNewFile */playbooks/*.yml set filetype=yaml.ansible
+autocmd mygroup FileType yaml.ansible setlocal makeprg=ansible-lint\ -p\ %
+                                   \| setlocal errorformat="%f:%l: [%t%n] %m,%f:%l: [EANSIBLE%n] %m,%f:%l: [ANSIBLE%n] %m"
 
 " peekaboo
 let g:peekaboo_window = 'vert bo 50new'
