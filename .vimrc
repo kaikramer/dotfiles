@@ -3,7 +3,6 @@ scriptencoding utf-8
 "{{{ plugins
 call plug#begin('~/.vim/plugged')
     " syntax and language support
-    Plug 'dense-analysis/ale'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'sheerun/vim-polyglot'
     Plug 'pearofducks/ansible-vim'
@@ -40,7 +39,6 @@ call plug#begin('~/.vim/plugged')
     " status line
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline'
-    "Plug 'maximbaz/lightline-ale'
 
     " colors and icons
     Plug 'norcalli/nvim-colorizer.lua'
@@ -242,12 +240,6 @@ nnoremap <silent> <leader>m :w <Bar> :make<CR>
 nnoremap <silent> <leader>n :call OpenNotes()<CR>
 xnoremap <leader>b :!boxes -d shell -s 50 -pa1<CR>
 
-" ALE
-"nnoremap <silent> <leader>at :ALEToggle<CR>
-"nnoremap <silent> <leader>al :ALELint<CR>
-"nnoremap <silent> <leader>an :ALENext<CR>
-"nnoremap <silent> <leader>ap :ALEPrevious<CR>
-
 " CoC
 nmap <silent> gd <Plug>(coc-definition)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -344,9 +336,10 @@ let g:lightline.component = {
      \}
 let g:lightline.component_expand = {
     \ 'buffers': 'lightline#bufferline#buffers',
-    \ 'linter_checking': 'lightline#ale#checking',
-    \ 'linter_warnings': 'lightline#ale#warnings',
-    \ 'linter_errors': 'lightline#ale#errors',
+    \ 'coc_hint': 'LightlineCocHints',
+    \ 'coc_info': 'LightlineCocInfos',
+    \ 'coc_warning': 'LightlineCocWarnings',
+    \ 'coc_error': 'LightlineCocErrors',
     \}
 let g:lightline.component_function = {
     \ 'readonly': 'LightlineReadonly',
@@ -355,15 +348,15 @@ let g:lightline.component_function = {
     \}
 let g:lightline.component_type = {
     \ 'buffers': 'tabsel',
-    \ 'linter_checking': 'right',
-    \ 'linter_warnings': 'warning',
-    \ 'linter_errors': 'error',
+    \ 'coc_warning': 'warning',
+    \ 'coc_error': 'error',
+    \ 'coc_hint': 'middle',
+    \ 'coc_info': 'tabsel',
     \}
 
 let g:lightline.active = {
     \ 'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'absolutepath', 'modified' ] ],
-    \ 'right': [ [ 'cocstatus'],
-    \            [ 'linter_checking', 'linter_errors', 'linter_warnings'],
+    \ 'right': [ [ 'coc_status', 'coc_error', 'coc_warning', 'coc_hint', 'coc_info' ],
     \            [ 'lineinfo' ],
     \            [ 'fileformat', 'fileencoding', 'filetype' ] ]
     \}
@@ -381,9 +374,30 @@ function! LightlineFugitive()
     return ''
 endfunction
 
-let g:lightline#ale#indicator_checking = ''
-let g:lightline#ale#indicator_warnings = '🔔'
-let g:lightline#ale#indicator_errors = '✘'
+function! s:lightline_coc_diagnostic(kind, sign) abort
+  let info = get(b:, 'coc_diagnostic_info', 0)
+  if empty(info) || get(info, a:kind, 0) == 0
+    return ''
+  endif
+  try
+    let s = g:coc_user_config['diagnostic'][a:sign . 'Sign']
+  catch
+    let s = ''
+  endtry
+  return printf('%s %d', s, info[a:kind])
+endfunction
+function! LightlineCocErrors() abort
+    return s:lightline_coc_diagnostic('error', 'E')
+endfunction
+function! LightlineCocWarnings() abort
+    return s:lightline_coc_diagnostic('warning', 'W')
+endfunction
+function! LightlineCocInfos() abort
+    return s:lightline_coc_diagnostic('information', 'I')
+endfunction
+function! LightlineCocHints() abort
+    return s:lightline_coc_diagnostic('hints', 'H')
+endfunction
 
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
@@ -425,32 +439,6 @@ let g:fzf_colors =
 " Hide statusline
 autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
   \| autocmd mygroup BufLeave <buffer> set laststatus=2 showmode ruler
-
-"}}}
-
-"{{{ ale
-"""""""""""""""""""""""""""""""
-" ale
-"""""""""""""""""""""""""""""""
-" Keep gutter open
-"let g:ale_sign_column_always = 1
-
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 0
-
-let g:ale_set_highlights = 0
-
-" Only run linters named in ale_linters settings.
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-\   'ansible': ['ansible_lint']
-\}
-
-" Symbols and colors
-highlight clear ALEErrorSign guifg=red
-highlight clear ALEWarningSign guifg=yellow
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '🔔'
 
 "}}}
 

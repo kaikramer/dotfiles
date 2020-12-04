@@ -1,4 +1,8 @@
 {
+    "diagnostic.errorSign": "",
+    "diagnostic.warningSign": "",
+    "diagnostic.hintSign": "",
+    "diagnostic.infoSign": "",
     "languageserver": {
         "groovy": {
             "command": "java",
