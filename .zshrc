@@ -86,7 +86,7 @@ export FZF_MARKS_COLOR_LHS=32
 export FZF_MARKS_COLOR_RHS=34
 
 # bat color scheme
-export BAT_THEME="ansi-dark"
+export BAT_THEME="gruvbox"
 
 # add some key bindings from oh-my-zsh
 bindkey '^[[1;5C' forward-word                        # [Ctrl-RightArrow] - move forward one word
@@ -136,12 +136,12 @@ alias b64='openssl enc -d -base64 -in '
 
 alias g='git'
 alias ga='git add'
+alias gb='git --no-pager branch -a'
 alias gc='git commit -v'
 alias gd='git difftool'
 alias gf='git fetch'
 alias gl='git pull --rebase'
-alias glg='git log --oneline --graph'
-alias glo='git log --oneline --decorate'
+alias glo='git --no-pager log -25 --pretty=format:"%C(yellow)%h %C(green)%ad%C(auto)%d %Creset%s %C(cyan)%aN" --date=short --graph --decorate'
 alias gm='git merge'
 alias gp='git push'
 alias gst='git status'

@@ -13,6 +13,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'liuchengxu/vista.vim'
     Plug 'mbbill/undotree'
     Plug 'mcchrish/nnn.vim'
+    Plug 'dyng/ctrlsf.vim'
 
     " git
     Plug 'airblade/vim-gitgutter'
@@ -24,7 +25,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-unimpaired'
     Plug 'tpope/vim-vinegar'
-    "Plug 'junegunn/vim-peekaboo'
     Plug 'junegunn/vim-easy-align'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'liuchengxu/vim-which-key'
@@ -34,7 +34,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'airblade/vim-rooter'
-    "Plug 'dyng/ctrlsf.vim'
 
     " status line
     Plug 'itchyny/lightline.vim'
@@ -42,9 +41,6 @@ call plug#begin('~/.vim/plugged')
 
     " colors and icons
     Plug 'norcalli/nvim-colorizer.lua'
-    Plug 'arcticicestudio/nord-vim'
-    Plug 'ayu-theme/ayu-vim'
-    Plug 'rakr/vim-one'
     Plug 'gruvbox-community/gruvbox'
     Plug 'ryanoasis/vim-devicons'
 call plug#end()
@@ -228,17 +224,25 @@ nnoremap <silent> <leader>fl :Lines<CR>
 nnoremap <silent> <leader>fm :Marks<CR>
 nnoremap <silent> <leader>r  :Rg<CR>
 
-" CtrlSF
-" nnoremap <leader>r :CtrlSF -hidden<Space>
-" vmap <silent> <leader>r <Plug>CtrlSFVwordExec
-
 " miscellaneous mappings
-nnoremap <silent> <leader>q :call QFixToggle()<CR>
-nnoremap <silent> <leader>ut :UndotreeShow<CR>
-nnoremap <silent> <leader>st :Vista!!<CR>
 nnoremap <silent> <leader>m :w <Bar> :make<CR>
-nnoremap <silent> <leader>n :call OpenNotes()<CR>
+nnoremap <silent> <leader>q :call QFixToggle()<CR>
+" nnoremap <silent> <leader>s :Vista!!<CR>
+nnoremap <silent> <leader>u :UndotreeShow<CR>
 xnoremap <leader>b :!boxes -d shell -s 50 -pa1<CR>
+
+" CtrlSF
+nmap     <leader>s :CtrlSF <C-R><C-W><CR>
+vmap     <leader>s <Plug>CtrlSFVwordExec
+
+" NERDTree and nnn
+nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
+nnoremap <silent> <leader>nf :NERDTreeFind <Bar> :wincmd p<CR>
+nnoremap <silent> <leader>np :Np<CR>
+
+" note taking
+nnoremap <silent> <leader>nn :call OpenNotes()<CR>
+nnoremap <silent> <leader>nu :call CreateNewUnnamedNote()<CR>
 
 " CoC
 nmap <silent> gd <Plug>(coc-definition)
@@ -274,12 +278,11 @@ vmap > >gv
 " w!! let's you sudo after file was opened!
 cmap w!! w !sudo tee % >/dev/null
 
-" note taking
-nnoremap <leader>e :NV<CR>
-nnoremap <silent> <leader>o :call CreateNewUnnamedNote()<CR>
-
 " remove trailing whitespace (from https://vim.fandom.com/wiki/Remove_unwanted_spaces)
 nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :%s/\r//ge <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" Fix spacing of ansible variables
+nnoremap <leader>a :%s/\M{{/{{ /g <Bar> :%s/\M}}/ }}/g <Bar> :nohl <CR>
 
 " terminal
 if has('nvim')
@@ -327,8 +330,10 @@ set showtabline=2
 let g:lightline.tabline = {'left': [['buffers']], 'right': [[ 'buffers_text' ]]}
 let g:lightline#bufferline#show_number = 0
 let g:lightline#bufferline#unnamed = '[No Name]'
-let g:lightline#bufferline#filename_modifier = ':t'
+let g:lightline#bufferline#filename_modifier = ':.'
 let g:lightline#bufferline#enable_devicons = 1
+let g:lightline#bufferline#clickable = 1
+let g:lightline.component_raw = {'buffers': 1}
 
 let g:lightline.component = {
      \ 'lineinfo': '%3l/%L : %-2v',
@@ -444,7 +449,11 @@ autocmd mygroup FileType fzf set laststatus=0 noshowmode noruler
 
 "{{{ coc
 """""""""""""""""""""""""""""""
-let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
+let g:coc_global_extensions = ['coc-marketplace','coc-json','coc-xml','coc-html','coc-css','coc-yaml','coc-vimlsp','coc-python']
+
+let g:coc_filetype_map = {
+    \ 'yaml.ansible': 'yaml',
+    \ }
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -535,6 +544,10 @@ let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_auto_focus = {
     \ 'at': 'start'
     \ }
+
+" also feed quickfix and location list with search result
+let g:ctrlsf_populate_qflist = 1
+
 "}}}
 
 " {{{ which-key
@@ -557,12 +570,12 @@ function! OpenNotes()
     let g:netrw_banner = 1
     let g:netrw_sort_by = "time"
     let g:netrw_sort_direction = "reverse"
-    "leftabove vsplit
-    "vertical resize 50
-    "e.
-    call nnn#pick()
+    leftabove vsplit
+    vertical resize 50
+    e.
+    "call nnn#pick()
     " sort by time
-    call feedkeys("tt")
+    "call feedkeys("tt")
 endfunction
 
 " }}}
