@@ -17,9 +17,15 @@
     },
     "python.jediEnabled": false,
     "clangd.path": "/home/kk/.config/coc/extensions/coc-clangd-data/install/10.0.0/clangd_10.0.0/bin/clangd",
-    "diagnostic-languageserver.trace.server": "verbose",
+    "yaml.format.enable": true,
+    "yaml.schemas": {
+        "https://json.schemastore.org/ansible-role-2.9": [ "*/roles/*.y*ml" ],
+        "https://json.schemastore.org/ansible-playbook": [ "deploy.y*ml" ]
+    },
+    "diagnostic-languageserver.trace.server": "messages",
     "diagnostic-languageserver.filetypes": {
-        "yaml.ansible": "ansible_lint"
+        "yaml.ansible": "ansible_lint",
+        "yaml": "ansible_lint"
     },
     "diagnostic-languageserver.linters": {
         "ansible_lint": {
