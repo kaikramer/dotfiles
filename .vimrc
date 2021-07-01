@@ -88,7 +88,7 @@ set shortmess=atToO             " no shortening of messages
 set shortmess+=c                " don't give ins-completion-menu messages.
 set comments=b:#,:%,fb:-,n:>,n:),sl:/**,mb:\ *,elx:\ */
 set completeopt=longest,menuone " popup menu doesn't select the first completion item, but inserts the longest common text of all matches; menu will come up even if there's only one match
-set hidden                      " if hidden is not set, TextEdit might fail.
+set hidden                      " keep files open without showing them (if hidden is not set, TextEdit might fail)
 set nobackup                    " some LSP servers have issues with backup files, see #649
 set nowritebackup               " some LSP servers have issues with backup files, see #649
 set cmdheight=2                 " better display for messages
@@ -216,7 +216,7 @@ nnoremap <C-n> :bn<cr>
 nnoremap <silent> <leader>fa :Maps<CR>
 nnoremap <silent> <leader>fb :Buffers<CR>
 nnoremap <silent> <leader>fc :Commits<CR>
-nnoremap <silent> <leader>g  :Files<CR>
+nnoremap <silent> <leader>t  :Files<CR>
 nnoremap <silent> <leader>ff :Files<CR>
 nnoremap <silent> <leader>fg :GFiles<CR>
 nnoremap <silent> <leader>fh :Helptags<CR>
@@ -283,6 +283,7 @@ nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :%s/\r//ge <Bar> :let @/=
 
 " Fix spacing of ansible variables
 nnoremap <leader>a :%s/\M{{/{{ /g <Bar> :%s/\M}}/ }}/g <Bar> :nohl <CR>
+xnoremap <leader>a :s/\M{{/{{ /g <Bar> :'<,'>s/\M}}/ }}/g <Bar> :nohl <CR>
 
 " terminal
 if has('nvim')
@@ -292,7 +293,7 @@ if has('nvim')
     autocmd mygroup TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
     autocmd mygroup FileType fzf tunmap <buffer> <Esc>
 
-    nnoremap <silent> <leader>t :split<CR>:resize 10<CR>:terminal<CR>
+    "nnoremap <silent> <leader>t :split<CR>:resize 10<CR>:terminal<CR>
     tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
     tnoremap <A-h> <C-\><C-N><C-w>h
     tnoremap <A-j> <C-\><C-N><C-w>j
@@ -418,7 +419,7 @@ autocmd mygroup User CocStatusChange,CocDiagnosticChange call lightline#update()
 let $FZF_DEFAULT_COMMAND = 'fd --type file --hidden --no-ignore --exclude .git'
 
 " Ignore filename for ripgrep
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --no-ignore --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
 
 " You can set up fzf window using a Vim command (Neovim or latest Vim 8 required)
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
