@@ -98,9 +98,12 @@ fi
 
 # history
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-setopt APPEND_HISTORY
+HISTSIZE=10000   # Number of commands that are loaded into memory from the history file
+SAVEHIST=10000   # Number of commands that are stored in the zsh history file
+
+# Write an entry in history file right after a command is finished (not only when the shell exits),
+# but do not constantly read new entries like "SHARE_HISTORY" does (do not modify history of current shell)
+setopt INC_APPEND_HISTORY_TIME
 
 # avoid spamming history with duplicate entries
 setopt EXTENDED_HISTORY
@@ -125,7 +128,7 @@ alias fd='fd --hidden --no-ignore'
 alias mc='mc -u'
 
 # show timestamps in history
-alias history='history -E' 
+alias history='history -E'
 
 alias sc='openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
 alias sp='openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
