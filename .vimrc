@@ -97,6 +97,7 @@ set signcolumn=yes              " always show signcolumns
 set autoindent                  " add indentation from current line for next line
 set cindent                     " indent lines after {, before } and after cinwords
 set scrolloff=5                 " scroll offset in lines
+set noequalalways               " when closing a window, do not resize other windows
 set clipboard=unnamed
 
 if !has('nvim')
