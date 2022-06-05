@@ -42,6 +42,7 @@ call plug#begin('~/.vim/plugged')
     " colors and icons
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'gruvbox-community/gruvbox'
+    Plug 'arcticicestudio/nord-vim'
     Plug 'ryanoasis/vim-devicons'
 call plug#end()
 "}}}
@@ -64,8 +65,11 @@ set t_md=
 let g:gruvbox_italic = 0
 let g:gruvbox_bold = 0
 let g:gruvbox_contrast_dark = 'hard' " soft/medium/hard
+let g:nord_bold = 0
+let g:nord_italic = 1
 set background=dark
-colorscheme gruvbox
+colorscheme nord
+hi Normal guibg=#282C34
 " }}}
 
 " misc settings {{{
