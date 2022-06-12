@@ -27,7 +27,16 @@ vim.o.mouse = 'a'                       -- allow mouse for all modes
 vim.o.clipboard = "unnamed"
 
 vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
-vim.cmd[[colorscheme catppuccin]]
+vim.g.nord_contrast = true
+vim.g.nord_borders = true
+vim.g.nord_disable_background = true
+vim.g.nord_enable_sidebar_background = true
+vim.g.nord_cursorline_transparent = false
+vim.g.nord_italic = false
+require('nord').set()
+vim.cmd([[
+hi Normal guibg=#282C34
+]])
 
 -- enhanced command-line completion
 vim.o.wildmenu = true
@@ -100,6 +109,7 @@ vim.api.nvim_set_keymap('n', '<leader>w', [[:let _s=@/ <Bar> :%s/\s\+$//e <Bar> 
 vim.api.nvim_set_keymap('n', '<leader>t', "<cmd>lua require('telescope.builtin').find_files()<CR>", { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>r', "<cmd>lua require('telescope.builtin').live_grep()<CR>", { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>k', "<cmd>lua require('telescope.builtin').keymaps()<CR>", { noremap = true })
 
 -- lsp
 vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<cr>', { noremap = true })
@@ -127,9 +137,55 @@ vim.api.nvim_set_keymap('x', 'x', 'd', { noremap = true })
 vim.api.nvim_set_keymap('n', 'xx', 'dd', { noremap = true })
 vim.api.nvim_set_keymap('n', 'X', 'D', { noremap = true })
 
--- plugins configurations
+-------------------------------------------------------------------------
+-- plugins
+-------------------------------------------------------------------------
 
-local custom_lualine_theme = require('lualine.themes.catppuccin')
+require('packer').startup(function(use)
+  use 'wbthomason/packer.nvim'
+
+  -- LSP and related
+  use 'neovim/nvim-lspconfig'
+  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+  use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
+  use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
+  use 'L3MON4D3/LuaSnip' -- Snippets plugin
+
+  -- usability
+  use 'Yggdroot/indentLine'
+  use 'junegunn/gv.vim' -- commit history
+  use 'junegunn/vim-easy-align'
+  use 'windwp/nvim-autopairs'
+  use 'svermeulen/vim-cutlass'
+  use 'tpope/vim-fugitive'
+  use 'tpope/vim-surround'
+  use 'tpope/vim-repeat'
+  use 'tpope/vim-commentary'
+  use 'tpope/vim-unimpaired'
+  use 'tpope/vim-vinegar'
+--  use 'airblade/vim-rooter'
+
+  -- colors and icons
+  use 'norcalli/nvim-colorizer.lua'
+  use { 'catppuccin/nvim', as = 'catppuccin' }
+  use 'shaunsingh/nord.nvim'
+
+  -- Treesitter
+  use 'nvim-treesitter/nvim-treesitter'
+  use 'JoosepAlviste/nvim-ts-context-commentstring'
+
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = {'kyazdani42/nvim-web-devicons', opt = true}
+  }
+
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim'} }
+  }
+end)
+
+local custom_lualine_theme = require('lualine.themes.nord')
 custom_lualine_theme.normal.a.gui = ''
 custom_lualine_theme.insert.a.gui = ''
 custom_lualine_theme.visual.a.gui = ''
@@ -147,7 +203,7 @@ require('lualine').setup {
 require('telescope').setup{
   pickers = {
     find_files = {
-      hidden = true
+      hidden = false
     }
   }
 }
@@ -158,46 +214,21 @@ require'nvim-treesitter.configs'.setup {
     enable = true
   },
   indent = {
-    enable = true
+    enable = false
   }
 }
--- vim.opt.foldmethod = "expr"
--- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
-local lsp_installer = require("nvim-lsp-installer")
-lsp_installer.on_server_ready(function(server)
-  local opts = {}
-  if server.name == "sumneko_lua" then
-    opts = {
-      settings = {
-        Lua = {
-          diagnostics = {
-            globals = { 'vim', 'use' }
-          },
-        }
-      }
-    }
-  end
-  server:setup(opts)
-end)
+vim.lsp.set_log_level("debug")
+require('vim.lsp.log').set_format_func(vim.inspect)
 
 local cmp = require "cmp"
 local luasnip = require "luasnip"
 cmp.setup {
-  -- Load snippet support
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
   },
-
-  -- Completion settings
-  completion = {
-    --completeopt = 'menu,menuone,noselect'
-    keyword_length = 2
-  },
-
-  -- Key mapping
   mapping = {
     ['<Down>'] = cmp.mapping.select_next_item(),
     ['<Up>'] = cmp.mapping.select_prev_item(),
@@ -209,8 +240,6 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-
-    -- Tab mapping
     ['<Tab>'] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -230,8 +259,6 @@ cmp.setup {
       end
     end
   },
-
-  -- Load sources, see: https://github.com/topics/nvim-cmp
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
@@ -240,53 +267,33 @@ cmp.setup {
   },
 }
 
--- require("nvim-autopairs.completion.cmp").setup {
---   map_cr = true,
---   map_complete = true,
---   auto_select = true
--- }
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+require'lspconfig'.html.setup { capabilities = capabilities }
 
-return require('packer').startup(function()
-  use 'wbthomason/packer.nvim'
+HOME = os.getenv("HOME")
+require'lspconfig'.sumneko_lua.setup {
+  cmd = { HOME .. "/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" },
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}
 
-  -- LSP and related
-  use 'neovim/nvim-lspconfig'
-  use 'williamboman/nvim-lsp-installer'
-  use 'glepnir/lspsaga.nvim' -- ???
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
-  use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
+require("nvim-autopairs").setup { }
 
-  -- usability
-  use 'Yggdroot/indentLine'
-  use 'junegunn/gv.vim' -- commit history
-  use 'junegunn/vim-easy-align'
-  use 'windwp/nvim-autopairs'
-  use 'svermeulen/vim-cutlass'
-  use 'tpope/vim-fugitive'
-  use 'tpope/vim-surround'
-  use 'tpope/vim-repeat'
-  use 'tpope/vim-commentary'
-  use 'tpope/vim-unimpaired'
-  use 'tpope/vim-vinegar'
-  use 'airblade/vim-rooter'
-
-  -- colors and icons
-  use 'norcalli/nvim-colorizer.lua'
-  use { 'catppuccin/nvim', as = 'catppuccin' }
-
-  -- Treesitter
-  use 'nvim-treesitter/nvim-treesitter'
-  use 'JoosepAlviste/nvim-ts-context-commentstring'
-
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true}
-  }
-
-  use {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim'} }
-  }
-end)
