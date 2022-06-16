@@ -1,5 +1,6 @@
-
+-------------------------------------------------------------------------
 -- misc settings
+-------------------------------------------------------------------------
 vim.o.fileencodings = 'utf-8,latin1'    -- auto detection of file encoding
 vim.o.belloff = "all"                   -- don't ring bell for anything
 vim.o.joinspaces = false                -- insert only one space after sentences when joining lines
@@ -88,13 +89,20 @@ vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 
 -- undo
-vim.o.undolevels = 1000             -- how many undos
-vim.o.undoreload = 10000            -- number of lines to save for undo
-vim.o.undofile = true               -- save undos after file closes
+vim.o.undolevels = 1000  -- how many undos
+vim.o.undoreload = 10000 -- number of lines to save for undo
+vim.o.undofile = true    -- save undos after file closes
 
 vim.o.grepprg = "rg --vimgrep"
 
+-- auto commands
+vim.api.nvim_create_augroup("mygroup", { clear = true })
+vim.cmd([[autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif]])
+vim.cmd([[autocmd mygroup Filetype markdown setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab]])
+
+-------------------------------------------------------------------------
 -- key mappings
+-------------------------------------------------------------------------
 
 vim.g.mapleader = " "
 
@@ -111,6 +119,11 @@ vim.api.nvim_set_keymap('n', '<leader>r', "<cmd>lua require('telescope.builtin')
 vim.api.nvim_set_keymap('n', '<leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', "<cmd>lua require('telescope.builtin').keymaps()<CR>", { noremap = true })
 
+-- nvim-tree
+vim.api.nvim_set_keymap('n', '<leader>nt', ":NvimTreeToggle<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>nf', ":NvimTreeFindFile<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>nr', ":NvimTreeRefresh<CR>", { noremap = true })
+
 -- lsp
 vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', 'gD', ':lua vim.lsp.buf.declaration()<cr>', { noremap = true })
@@ -121,7 +134,9 @@ vim.api.nvim_set_keymap('n', 'gt', ':lua vim.lsp.buf.type_definition()<cr>', { n
 vim.api.nvim_set_keymap('n', 'K', ':lua vim.lsp.buf.hover()<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-k>', ':lua vim.lsp.buf.signature_help()<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-1>', ':lua vim.lsp.buf.code_action()<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>rn', ':lua vim.lsp.buf.rename()<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>lr', ':lua vim.lsp.buf.rename()<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>lf', ':lua vim.lsp.buf.format()<cr>', { noremap = true })
+vim.api.nvim_set_keymap('x', '<leader>lf', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<cr>', { noremap = true })
 
 -- use more accessible prefixes for vim-unimpaired
 vim.api.nvim_set_keymap('n', 'ö', '[', { noremap = false })
@@ -163,9 +178,12 @@ require('packer').startup(function(use)
   use 'tpope/vim-commentary'
   use 'tpope/vim-unimpaired'
   use 'tpope/vim-vinegar'
---  use 'airblade/vim-rooter'
+  use 'airblade/vim-rooter'
+  use 'kyazdani42/nvim-tree.lua'
+  use 'nvim-lualine/lualine.nvim'
 
   -- colors and icons
+  use 'kyazdani42/nvim-web-devicons'
   use 'norcalli/nvim-colorizer.lua'
   use { 'catppuccin/nvim', as = 'catppuccin' }
   use 'shaunsingh/nord.nvim'
@@ -173,11 +191,6 @@ require('packer').startup(function(use)
   -- Treesitter
   use 'nvim-treesitter/nvim-treesitter'
   use 'JoosepAlviste/nvim-ts-context-commentstring'
-
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true}
-  }
 
   use {
     'nvim-telescope/telescope.nvim',
@@ -192,15 +205,46 @@ custom_lualine_theme.visual.a.gui = ''
 custom_lualine_theme.replace.a.gui = ''
 custom_lualine_theme.inactive.a.gui = ''
 
-require('lualine').setup {
-  options = {
-    section_separators = '',
-    component_separators = '',
-    theme = custom_lualine_theme
+require'nvim-tree'.setup {
+  view = {
+    centralize_selection = true,
+    width = 50,
   }
 }
 
-require('telescope').setup{
+require('lualine').setup {
+  options = {
+    section_separators = '',
+    component_separators = '|',
+    theme = custom_lualine_theme,
+    icons_enabled = false,
+    global_status = false
+  },
+  extensions = { 'nvim-tree' },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch', 'diff', 'diagnostics' },
+    lualine_c = { { 'filename', path = 3 } }, -- show full path
+    lualine_x = { 'fileformat', 'encoding', 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' }
+  },
+  tabline = {
+    lualine_a = {
+      {
+        'buffers',
+        mode = 2, -- show buffer name and buffer index
+        show_filename_only = false,
+        buffers_color = {
+            active = 'lualine_y_normal',
+            inactive = 'lualine_c_normal'
+          }
+      }
+    }
+  }
+}
+
+require('telescope').setup {
   pickers = {
     find_files = {
       hidden = false
