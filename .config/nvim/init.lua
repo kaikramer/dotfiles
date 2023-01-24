@@ -27,18 +27,6 @@ vim.o.showtabline = 2                   -- always show tabline
 vim.o.mouse = 'a'                       -- allow mouse for all modes
 vim.o.clipboard = "unnamed"
 
-vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
-vim.g.nord_contrast = true
-vim.g.nord_borders = true
-vim.g.nord_disable_background = true
-vim.g.nord_enable_sidebar_background = true
-vim.g.nord_cursorline_transparent = false
-vim.g.nord_italic = false
-require('nord').set()
-vim.cmd([[
-hi Normal guibg=#282C34
-]])
-
 -- enhanced command-line completion
 vim.o.wildmenu = true
 vim.o.wildmode = "longest:full,full"    -- first tab will complete to longest string and show the the match list, second tab will complete to first full match
@@ -183,12 +171,15 @@ require('packer').startup(function(use)
     'nvim-treesitter/nvim-treesitter-textobjects',
     after = 'nvim-treesitter',
   }
+  use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+  }
 
   -- Fuzzy Finder (files, lsp, etc)
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
 
   -- usability
-  use 'Yggdroot/indentLine'
   use 'junegunn/gv.vim' -- commit history
   use 'lewis6991/gitsigns.nvim'
   use 'junegunn/vim-easy-align'
@@ -207,8 +198,15 @@ require('packer').startup(function(use)
   -- colors and icons
   use 'kyazdani42/nvim-web-devicons'
   use 'norcalli/nvim-colorizer.lua'
-  use 'shaunsingh/nord.nvim'
+  use 'RRethy/nvim-base16'
 end)
+
+require('base16-colorscheme').setup({
+    base00 = '#282C34', base01 = '#282C34', base02 = '#5A6374', base03 = '#5A6374',
+    base04 = '#5A6374', base05 = '#DCDFE4', base06 = '#5A6374', base07 = '#c5c8e6',
+    base08 = '#61AFEF', base09 = '#98C379', base0A = '#98C379', base0B = '#E5C07B',
+    base0C = '#C678DD', base0D = '#56B6C2', base0E = '#98C379', base0F = '#DCDFE4',
+})
 
 local custom_lualine_theme = require('lualine.themes.nord')
 custom_lualine_theme.normal.a.gui = ''
@@ -225,6 +223,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+require'colorizer'.setup()
 
 require('gitsigns').setup {
   signs = {
@@ -285,7 +285,7 @@ require('telescope').setup {
 
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'c', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -350,11 +350,15 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
+  html = {},
 
   sumneko_lua = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
+      diagnostics = {
+        globals = {"vim"},
+      },
     },
   },
 }
@@ -374,7 +378,6 @@ mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      -- on_attach = on_attach,
       settings = servers[server_name],
     }
   end,
@@ -430,4 +433,6 @@ cmp.setup {
 }
 
 require("nvim-autopairs").setup { }
+
+require("trouble").setup { }
 

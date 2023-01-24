@@ -1,0 +1,49 @@
+add_newline = false
+
+format = """
+$time\
+$status\
+$cmd_duration\
+$username\
+$hostname\
+$localip\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$character"""
+
+[time]
+disabled = false
+format = '[\[$time\]](fg:8) '
+time_format = '%H:%M'
+utc_time_offset = '+1'
+
+[status]
+format = '[✘ $status ](fg:9)'
+disabled = false
+
+[directory]
+fish_style_pwd_dir_length = 1
+style = 'fg:4'
+
+[git_branch]
+format = '[$symbol$branch ](fg:10)'
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total) ]($style)\)'
+
+[git_status]
+format = '([$all_status$ahead_behind](fg:3) )'
+ahead = '⇡${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
+
+[cmd_duration]
+min_time = 1000
+format = '[$duration ](white)'
+
+[character]
+success_symbol = '[](bold green)'
+error_symbol = '[](bold green)'
+

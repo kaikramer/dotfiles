@@ -38,7 +38,7 @@ set -g default_user kk
 set -g fish_prompt_pwd_dir_length 1
 set -g theme_project_dir_length 1
 set -g theme_newline_cursor no
-set -g theme_newline_prompt '$ '
+set -g theme_newline_prompt ' '
 
 function bobthefish_colors -S -d 'User defined colors'
     set -x color_initial_segment_exit     383838 red

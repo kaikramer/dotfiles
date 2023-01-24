@@ -9,9 +9,9 @@ stty -ixon
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+#fi
 
 # Optimize slow compinit by only calling it once per day (see https://gist.github.com/ctechols/ca1035271ad134841284#gistcomment-2894219)
 # To manually rebuild the cache of executable commands, use command 'rehash'
@@ -34,8 +34,9 @@ local zcd=${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
 # zinit plugin manager
 source ~/.zinit/bin/zinit.zsh
-zinit ice lucid atload'source ~/.p10k.zsh' nocd; zinit light romkatv/powerlevel10k
+#zinit ice lucid atload'source ~/.p10k.zsh' nocd; zinit light romkatv/powerlevel10k
 zinit ice wait lucid; zinit light urbainvaes/fzf-marks
+zinit ice wait lucid; zinit light Aloxaf/fzf-tab
 zinit ice wait lucid blockf atpull'zinit creinstall -q .'; zinit light zsh-users/zsh-completions
 zinit ice wait lucid atinit"ZINIT[COMPINIT_OPTS]=-C; _zicompinit_custom; zicdreplay"; zinit light zdharma/fast-syntax-highlighting
 zinit ice wait lucid atload"!_zsh_autosuggest_start"; zinit light zsh-users/zsh-autosuggestions
@@ -211,4 +212,5 @@ pastefinish() {
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 
+eval "$(starship init zsh)"
 #zprof
