@@ -25,7 +25,8 @@ vim.o.history = 100                     -- command line history keeps 100 entrie
 vim.o.swapfile = false                  -- disable swap files
 vim.o.showtabline = 2                   -- always show tabline
 vim.o.mouse = 'a'                       -- allow mouse for all modes
-vim.o.clipboard = "unnamed"
+vim.o.conceallevel = 0                  -- disable conceal feature (enabled by plugin indentLine)
+vim.o.clipboard = "unnamedplus"
 
 -- enhanced command-line completion
 vim.o.wildmenu = true
@@ -88,6 +89,9 @@ vim.api.nvim_create_augroup("mygroup", { clear = true })
 vim.cmd([[autocmd mygroup BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif]])
 vim.cmd([[autocmd mygroup Filetype markdown setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab]])
 
+-- when file is not readable or writable, automatically use suda
+vim.cmd([[ let g:suda_smart_edit = 1 ]])
+
 -------------------------------------------------------------------------
 -- key mappings
 -------------------------------------------------------------------------
@@ -95,7 +99,7 @@ vim.cmd([[autocmd mygroup Filetype markdown setlocal tabstop=2 softtabstop=2 shi
 vim.g.mapleader = " "
 
 vim.api.nvim_set_keymap('n', '<C-n>', ':bn<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-p>', ':bpCR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-p>', ':bp<CR>', { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>v', ":vsp ~/.config/nvim/init.lua<CR>", { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>q', ":call QFixToggle()<CR>", { noremap = true })
@@ -106,6 +110,7 @@ vim.api.nvim_set_keymap('n', '<leader>t', "<cmd>lua require('telescope.builtin')
 vim.api.nvim_set_keymap('n', '<leader>r', "<cmd>lua require('telescope.builtin').live_grep()<CR>", { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', "<cmd>lua require('telescope.builtin').keymaps()<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>s', "<cmd>lua require('telescope.builtin').grep_string()<CR>", { noremap = true })
 
 -- nvim-tree
 vim.api.nvim_set_keymap('n', '<leader>nt', ":NvimTreeToggle<CR>", { noremap = true })
@@ -194,6 +199,7 @@ require('packer').startup(function(use)
   use 'airblade/vim-rooter'
   use 'kyazdani42/nvim-tree.lua'
   use 'nvim-lualine/lualine.nvim'
+  use 'lambdalisue/suda.vim'
 
   -- colors and icons
   use 'kyazdani42/nvim-web-devicons'
@@ -208,7 +214,7 @@ require('base16-colorscheme').setup({
     base0C = '#C678DD', base0D = '#56B6C2', base0E = '#98C379', base0F = '#DCDFE4',
 })
 
-local custom_lualine_theme = require('lualine.themes.nord')
+local custom_lualine_theme = require('lualine.themes.onedark')
 custom_lualine_theme.normal.a.gui = ''
 custom_lualine_theme.insert.a.gui = ''
 custom_lualine_theme.visual.a.gui = ''
