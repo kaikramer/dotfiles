@@ -84,6 +84,7 @@ mcview_eof=
 skin=nicedark
 
 safe_overwrite=false
+shadows=true
 
 [Layout]
 message_visible=false
@@ -95,7 +96,7 @@ menubar_visible=true
 free_space=true
 horizontal_split=false
 vertical_equal=true
-left_panel_size=119
+left_panel_size=158
 horizontal_equal=true
 top_panel_size=1
 

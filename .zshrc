@@ -33,8 +33,8 @@ _zicompinit_custom() {
 local zcd=${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
 # zinit plugin manager
-source ~/.zinit/bin/zinit.zsh
-#zinit ice lucid atload'source ~/.p10k.zsh' nocd; zinit light romkatv/powerlevel10k
+#source ~/.zinit/bin/zinit.zsh
+source $HOME/.local/share/zinit/zinit.git/zinit.zsh
 zinit ice wait lucid; zinit light urbainvaes/fzf-marks
 zinit ice wait lucid; zinit light Aloxaf/fzf-tab
 zinit ice wait lucid blockf atpull'zinit creinstall -q .'; zinit light zsh-users/zsh-completions
@@ -73,7 +73,7 @@ _fzf_complete_ssh() {
 
 
 # bind ssh completion to Ctrl-S
-start_ssh_completion () { LBUFFER="ssh **" ; fzf-completion }
+start_ssh_completion () { LBUFFER="ssh " ; fzf-completion }
 zle -N start_ssh_completion
 bindkey '^s' start_ssh_completion
 
@@ -87,7 +87,7 @@ export FZF_MARKS_COLOR_LHS=32
 export FZF_MARKS_COLOR_RHS=34
 
 # bat color scheme
-export BAT_THEME="gruvbox"
+export BAT_THEME="base16-256"
 
 # add some key bindings from oh-my-zsh
 bindkey '^[[1;5C' forward-word                        # [Ctrl-RightArrow] - move forward one word
@@ -122,7 +122,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 alias la='ls -la'
 alias vi='nvim'
-alias n='nnn'
+#alias n='nnn'
 alias fd='fd --hidden --no-ignore'
 
 # make directory changes faster
@@ -192,11 +192,25 @@ zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR                      
 zstyle ':completion:*:man:*'      menu yes select                                          # man pages
 zstyle ':completion:*:manuals'    separate-sections true                                   #   "
 zstyle ':completion:*:manuals.*'  insert-sections   true                                   #   "
+zstyle ':completion:*'            special-dirs      true
+zstyle ':completion:*:processes' command 'ps aux'
+
+# fzf-tab
+zstyle ':completion:*:git-checkout:*' sort false                                # disable sort when completing `git checkout`
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}                           # set list-colors to enable filename colorizing
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'   # preview directory's content with exa when completing cd
+zstyle ':fzf-tab:*' continuous-trigger '/'
 
 # include hidden files for CTRL-T command
 export FZF_DEFAULT_COMMAND='fd --type file --no-ignore --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--height=80%" # do not use --ansi it makes fzf slow
+
+export FZF_COMPLETION_TRIGGER=''
+bindkey '^T' fzf-completion
+bindkey '^I' $fzf_default_completion
+
+#bindkey '\ec' fzf-cd-widget # Alt-C
 
 export LC_ALL="en_US.UTF-8"
 
@@ -211,6 +225,75 @@ pastefinish() {
 }
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
+
+# put current WSL ip address to Windows clipboard
+ipa() {
+  hostname -I | awk '{print $1}' | /mnt/c/Windows/System32/clip.exe
+}
+
+# open explorer with WSL path
+explorer() {
+    winpath=$(wslpath -w "$1")
+    /mnt/c/Windows/explorer.exe "$winpath"
+}
+
+# hex to base64 conversion
+hex2b64() {
+  echo "$1" | xxd -r -p | base64
+}
+
+# hex to URL base64 conversion
+hex2b64url() {
+  echo "$1" | xxd -r -p | base64 | sed 's/+/-/g; s,/,_,g'
+}
+
+# decode JWT
+jwt-decode() {
+  jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' <<< $1
+}
+
+print-colortable() {
+  for colour in {1..16}
+      do echo -en "\033[38;5;${colour}m38;5;${colour} \n"
+  done | column -x
+}
+
+# start nnn
+n() {
+    # Block nesting of nnn in subshells
+    if [[ "${NNNLVL:-0}" -ge 1 ]]; then
+        echo "nnn is already running"
+        return
+    fi
+
+    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
+    # see. To cd on quit only on ^G, remove the "export" and make sure not to
+    # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
+    #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    export NNN_TMPFILE="$HOME/.config/nnn/tmp/last_dir"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    # The backslash allows one to alias n to nnn if desired without making an
+    # infinitely recursive alias
+    # -C use 8 bit colors
+    # -n start in search mode
+    \nnn -C -n "$@"
+
+    if [ -f "$NNN_TMPFILE" ]; then
+            . "$NNN_TMPFILE"
+            rm -f "$NNN_TMPFILE" > /dev/null
+    fi
+}
+zle -N n
+#bindkey -s "^[c" 'n .\n'    # Alt-C
+bindkey -s "^[x" 'n .\n'    # Alt-X
+#bindkey '^[c' n    # Alt-C
 
 eval "$(starship init zsh)"
 #zprof
