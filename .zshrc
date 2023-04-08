@@ -283,7 +283,7 @@ n() {
     # infinitely recursive alias
     # -C use 8 bit colors
     # -n start in search mode
-    \nnn -C -n "$@"
+    \nnn -C "$@"
 
     if [ -f "$NNN_TMPFILE" ]; then
             . "$NNN_TMPFILE"

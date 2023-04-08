@@ -32,16 +32,17 @@ truncation_length = 20
 format = '\([$state( $progress_current/$progress_total) ]($style)\)'
 
 [git_status]
-format = '([$conflicted$ahead_behind$diverged$changes($deleted$renamed$staged$modified$untracked )](fg:3))'
+format = '([$conflicted$ahead_behind$diverged$changes($deleted$staged$modified$untracked)](fg:3))'
 ahead = '⇡${count} '
 diverged = '⇡${ahead_count}⇣${behind_count} '
 behind = '⇣${count} '
-up_to_date = '✓ '
-deleted = '[●](red)'
-staged = '[●](green)'
-renamed = '[●](fg:14)'
-modified = '[●](yellow)'
-untracked = '[●](fg:13)'
+up_to_date = ''
+staged = '+${count} '
+modified = '!${count} '
+deleted = '-${count} '
+untracked = '?${count} '
+stashed = '\$${count} '
+
 
 [cmd_duration]
 min_time = 1000

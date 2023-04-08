@@ -131,6 +131,8 @@ vim.api.nvim_set_keymap('n', '<leader>lr', ':lua vim.lsp.buf.rename()<cr>', { no
 vim.api.nvim_set_keymap('n', '<leader>lf', ':lua vim.lsp.buf.format()<cr>', { noremap = true })
 vim.api.nvim_set_keymap('x', '<leader>lf', '<ESC><cmd>lua vim.lsp.buf.range_formatting()<cr>', { noremap = true })
 
+vim.api.nvim_set_keymap('n', '<leader>o', ":SymbolsOutline<CR>", { noremap = true })
+
 -- use more accessible prefixes for vim-unimpaired
 vim.api.nvim_set_keymap('n', 'ö', '[', { noremap = false })
 vim.api.nvim_set_keymap('n', 'ä', ']', { noremap = false })
@@ -180,6 +182,7 @@ require('packer').startup(function(use)
     "folke/trouble.nvim",
     requires = "kyazdani42/nvim-web-devicons",
   }
+  use 'simrat39/symbols-outline.nvim'
 
   -- Fuzzy Finder (files, lsp, etc)
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
@@ -442,3 +445,6 @@ require("nvim-autopairs").setup { }
 
 require("trouble").setup { }
 
+require("symbols-outline").setup {
+  autofold_depth = 0
+}
