@@ -14,7 +14,7 @@ $character"""
 disabled = false
 format = '[\[$time\]](fg:8) '
 time_format = '%H:%M'
-utc_time_offset = '+1'
+utc_time_offset = 'local'
 
 [status]
 format = '[✘ $status ](fg:9)'
