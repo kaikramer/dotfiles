@@ -3,7 +3,7 @@ if status is-interactive
 
     alias la="ls -la"
     alias vi="nvim"
-    alias fd="fdfind --hidden --no-ignore "
+    # alias fd="fdfind --hidden --no-ignore "
     alias cat="batcat -p -P"
     alias exa="exa -la --git"
 
@@ -28,21 +28,28 @@ if status is-interactive
     abbr gr 'git reset'
     abbr gs 'git status'
 
+    abbr bd '| base64 -d |'
+
+    set -gx EDITOR nvim
+
     # use Linux colors for ls on macOS
     set -gx LSCOLORS "ExGxBxDxCxEgEdxbxgxcxd"
 
     # fzf
     #set -gx FZF_DEFAULT_COMMAND 'rg --files --hidden --glob "!.git/*"'
-    set -gx FZF_DEFAULT_COMMAND 'fd --type file --no-ignore --hidden --exclude .git'
+    set -gx FZF_DEFAULT_COMMAND 'fd --type file --strip-cwd-prefix --no-ignore --hidden --exclude .git'
     set -gx FZF_CTRL_T_COMMAND  "$FZF_DEFAULT_COMMAND"
     set -gx FZF_DEFAULT_OPTS    "--height=80% --layout=reverse " # do not use --ansi it makes fzf slow
-    function fish_user_key_bindings
-        fzf_key_bindings
-    end
+    #set -gx FZF_CTRL_R_OPTS     "--preview "
+    # using original fzf fish functions file but renamed to "fzf-history-widget.fish" and with outer function and key bindings removed
+    bind \cr fzf-history-widget
+    # fzf-file-widget is only available after fzf-history-widget was executed/autoloaded
+    bind \ct fzf-file-widget
 
     # ssh completion with fzf
     function fssh -d "Fuzzy-find ssh host and ssh into it"
-        rg --ignore-case '^host [^*]' ~/.ssh/config | cut -d ' ' -f 2- --output-delimiter=\n | sort | uniq -u | fzf | read -l result; and ssh "$result"
+        rg --ignore-case '^host [^*]' ~/.ssh/config | cut -d ' ' -f 2- --output-delimiter=\n | sort | uniq -u | fzf | read -l result; and commandline "ssh $result"
+        commandline -f execute
     end
     bind \cs fssh
 
@@ -66,8 +73,7 @@ if status is-interactive
 
     # zoxide
     zoxide init fish | source
-    abbr cd z
-    bind \cx zi
+    bind \ec 'zi; commandline -f repaint'
 
     starship init fish | source
 end
