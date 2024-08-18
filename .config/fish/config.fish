@@ -1,34 +1,38 @@
 if status is-interactive
     set -U fish_greeting ""
 
-    alias la="ls -la"
+    alias la="LC_COLLATE=C ls -la"
     alias vi="nvim"
-    # alias fd="fdfind --hidden --no-ignore "
+    alias fd="fd --hidden --no-ignore "
     alias cat="batcat -p -P"
     alias exa="exa -la --git"
 
-    abbr sc 'openssl x509 -noout -text -inform DER -nameopt RFC2253 -in '
-    abbr sp 'openssl x509 -noout -text -inform PEM -nameopt RFC2253 -in '
-    abbr sl 'openssl crl -noout -text -inform DER -in '
+    abbr vifi 'vi ~/.config/fish/config.fish'
+
+    abbr sc 'openssl x509 -noout -text -nameopt RFC2253 -inform DER -in '
+    abbr sp 'openssl x509 -noout -text -nameopt RFC2253 -inform PEM -in '
+    abbr sl 'openssl crl -noout -text -nameopt RFC2253 -inform DER -in '
     abbr p12 'openssl pkcs12 -in '
     abbr p10 'openssl req -noout -text -in '
     abbr b64 'openssl enc -d -base64 -in '
 
     abbr g git
-    abbr ga 'git add'
+    abbr ga 'git-forgit add'
     abbr gb 'git branch'
     abbr gbv 'git branch -vv'
-    abbr gc 'git commit -v'
-    abbr gco 'git checkout'
-    abbr gd 'git diff'
+    abbr gc 'git commit -v -m'
+    # abbr gco 'git checkout'
+    abbr gco 'git-forgit checkout_branch'
+    abbr gd 'git-forgit diff'
     abbr gf 'git fetch --prune'
     abbr gl 'git --no-pager log -25 --pretty=format:"%C(yellow)%h %C(green)%ad%C(auto)%d %Creset%s %C(cyan)%aN" --date short --graph --decorate'
+    abbr glo 'git-forgit log'
     abbr gm 'git merge'
     abbr gp 'git push'
     abbr gr 'git reset'
     abbr gs 'git status'
-
-    abbr bd '| base64 -d |'
+    abbr gss 'git-forgit stash_show'
+    abbr gsp 'git-forgit stash_push'
 
     set -gx EDITOR nvim
 
@@ -69,11 +73,36 @@ if status is-interactive
             --bind "ctrl-x:execute:$git_checkout"
     end
 
+    function fgb
+        set branches "$(git branch --all | grep -v HEAD)"
+        set branch $(echo "$branches" | fzf)
+        git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+    end
+
+    function fcd
+        while true
+            set result $(fd --max-depth 1 --type d --hidden | fzf --bind "right:accept" --bind "left:become(echo '..')" --bind "q:abort")
+            switch "$result"
+                case ""
+                    return 0
+                case ".."
+                    cd ..
+                case '*'
+                    cd $result
+            end
+        end
+    end
+
     if test -e ~/.work.fish; source ~/.work.fish; end
 
     # zoxide
     zoxide init fish | source
     bind \ec 'zi; commandline -f repaint'
+
+    # atuin
+    set -gx ATUIN_NOBIND "true"
+    atuin init fish | source
+    bind \cr _atuin_search
 
     starship init fish | source
 end

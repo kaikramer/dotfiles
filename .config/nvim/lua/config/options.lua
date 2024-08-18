@@ -24,6 +24,7 @@ vim.o.showtabline = 2                   -- always show tabline
 vim.o.mouse = 'a'                       -- allow mouse for all modes
 vim.o.conceallevel = 0                  -- disable conceal feature (enabled by plugin indentLine)
 vim.o.clipboard = "unnamedplus"
+vim.opt.termguicolors = true
 
 -- enhanced command-line completion
 vim.o.wildmenu = true
