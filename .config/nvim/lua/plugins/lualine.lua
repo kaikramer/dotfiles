@@ -26,17 +26,17 @@ return {
         lualine_z = { { 'mode', fmt = function() return ' ' end, draw_empty = true, padding = 0 } }
       },
       tabline = {
-        lualine_a = {
-          {
-            'buffers',
-            mode = 2, -- show buffer name and buffer index
-            show_filename_only = false,
-            buffers_color = {
-              active = 'lualine_y_normal',
-              inactive = 'lualine_c_normal'
-            }
-          }
-        }
+        -- lualine_a = {
+      --     {
+      --       'buffers',
+      --       mode = 2, -- show buffer name and buffer index
+      --       show_filename_only = false,
+      --       buffers_color = {
+      --         active = 'lualine_y_normal',
+      --         inactive = 'lualine_c_normal'
+      --       }
+      --     }
+        -- }
       }
     }
   end

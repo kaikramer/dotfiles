@@ -20,11 +20,10 @@ vim.o.cindent = true                    -- indent lines after {, before } and af
 vim.o.equalalways = false               -- when closing a window, do not resize other windows
 vim.o.history = 100                     -- command line history keeps 100 entries
 vim.o.swapfile = false                  -- disable swap files
-vim.o.showtabline = 2                   -- always show tabline
+-- vim.o.showtabline = 2                   -- always show tabline
 vim.o.mouse = 'a'                       -- allow mouse for all modes
 vim.o.conceallevel = 0                  -- disable conceal feature (enabled by plugin indentLine)
 vim.o.clipboard = "unnamedplus"
-vim.opt.termguicolors = true
 
 -- enhanced command-line completion
 vim.o.wildmenu = true
