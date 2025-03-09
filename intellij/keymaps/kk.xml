@@ -18,6 +18,7 @@
   <action id="CollapseAll">
     <keyboard-shortcut first-keystroke="ctrl subtract" />
   </action>
+  <action id="CollapseBlock" />
   <action id="CollapseExpandableComponent">
     <keyboard-shortcut first-keystroke="shift enter" />
     <keyboard-shortcut first-keystroke="ctrl subtract" />
@@ -25,13 +26,21 @@
   <action id="CollapseRegion">
     <keyboard-shortcut first-keystroke="ctrl subtract" />
   </action>
+  <action id="CollapseSelection" />
   <action id="CommentByLineComment">
     <keyboard-shortcut first-keystroke="ctrl divide" />
     <keyboard-shortcut first-keystroke="shift ctrl 7" />
   </action>
+  <action id="Console.TableResult.ColumnSortReset" />
   <action id="Console.TableResult.EditFilterCriteria" />
+  <action id="Console.TableResult.SetDefault" />
   <action id="DatabaseView.FullTextSearch" />
   <action id="DatabaseView.OpenDdlInConsole" />
+  <action id="Diff.FocusOppositePane" />
+  <action id="EditSource">
+    <keyboard-shortcut first-keystroke="f12" />
+  </action>
+  <action id="EditorChooseLookupItemDot" />
   <action id="EditorCodeBlockEnd">
     <keyboard-shortcut first-keystroke="ctrl #10000c4" />
   </action>
@@ -47,6 +56,10 @@
   <action id="EditorDecreaseFontSize">
     <keyboard-shortcut first-keystroke="ctrl minus" />
   </action>
+  <action id="EditorDuplicate">
+    <keyboard-shortcut first-keystroke="ctrl alt d" />
+  </action>
+  <action id="EditorDuplicateLines" />
   <action id="EditorIncreaseFontSize">
     <keyboard-shortcut first-keystroke="ctrl plus" />
   </action>
@@ -75,8 +88,11 @@
     <keyboard-shortcut first-keystroke="shift ctrl alt b" />
   </action>
   <action id="GotoBookmark0" />
+  <action id="GotoNextError">
+    <keyboard-shortcut first-keystroke="alt #10000c4" />
+  </action>
   <action id="GotoPreviousError">
-    <keyboard-shortcut first-keystroke="shift ctrl f1" />
+    <keyboard-shortcut first-keystroke="alt #10000d6" />
   </action>
   <action id="GotoTest">
     <keyboard-shortcut first-keystroke="shift ctrl alt u" />
@@ -96,11 +112,40 @@
   <action id="NewElement">
     <keyboard-shortcut first-keystroke="ctrl n" />
   </action>
+  <action id="NextDiff">
+    <keyboard-shortcut first-keystroke="ctrl f7" />
+    <keyboard-shortcut first-keystroke="ctrl alt #10000c4" />
+  </action>
+  <action id="NextOccurence">
+    <keyboard-shortcut first-keystroke="ctrl alt #10000c4" />
+  </action>
+  <action id="NextSplitter">
+    <keyboard-shortcut first-keystroke="ctrl tab" />
+  </action>
+  <action id="NextTab">
+    <keyboard-shortcut first-keystroke="ctrl f6" />
+    <keyboard-shortcut first-keystroke="ctrl page_down" />
+  </action>
   <action id="ParameterInfo">
     <keyboard-shortcut first-keystroke="ctrl p" />
   </action>
   <action id="PopupHector" />
+  <action id="PreviousDiff">
+    <keyboard-shortcut first-keystroke="shift f7" />
+    <keyboard-shortcut first-keystroke="ctrl alt #10000d6" />
+  </action>
+  <action id="PreviousOccurence">
+    <keyboard-shortcut first-keystroke="ctrl alt #10000d6" />
+  </action>
+  <action id="PreviousTab">
+    <keyboard-shortcut first-keystroke="shift ctrl f6" />
+    <keyboard-shortcut first-keystroke="ctrl page_up" />
+  </action>
   <action id="Print" />
+  <action id="QuickJavaDoc">
+    <mouse-shortcut keystroke="alt button2" />
+    <keyboard-shortcut first-keystroke="f2" />
+  </action>
   <action id="Replace">
     <keyboard-shortcut first-keystroke="shift ctrl alt f" />
   </action>
@@ -112,19 +157,55 @@
     <keyboard-shortcut first-keystroke="shift ctrl alt equals" />
     <keyboard-shortcut first-keystroke="shift ctrl alt add" />
   </action>
+  <action id="Scratch.ShowFilesPopup">
+    <keyboard-shortcut first-keystroke="shift ctrl alt back_space" />
+  </action>
+  <action id="ShowBookmarks">
+    <keyboard-shortcut first-keystroke="f11" />
+  </action>
   <action id="ShowPopupMenu">
     <keyboard-shortcut first-keystroke="shift alt s" />
     <keyboard-shortcut first-keystroke="ctrl f10" />
     <keyboard-shortcut first-keystroke="shift alt t" />
   </action>
   <action id="ShowUmlDiagram" />
+  <action id="SmartTypeCompletion">
+    <keyboard-shortcut first-keystroke="shift ctrl space" />
+  </action>
+  <action id="Switcher" />
   <action id="SynchronizeCurrentFile">
     <keyboard-shortcut first-keystroke="ctrl r" />
   </action>
+  <action id="Terminal.CloseTab" />
+  <action id="Terminal.ShowDocumentation">
+    <mouse-shortcut keystroke="alt button2" />
+    <keyboard-shortcut first-keystroke="f2" />
+  </action>
   <action id="Terminal.SwitchFocusToEditor" />
+  <action id="ToggleBookmark">
+    <keyboard-shortcut first-keystroke="shift f11" />
+  </action>
   <action id="ToggleBookmark7" />
+  <action id="UnsplitAll">
+    <keyboard-shortcut first-keystroke="shift ctrl tab" />
+  </action>
   <action id="UsageFiltering.ReadAccess" />
   <action id="UsageFiltering.WriteAccess" />
+  <action id="UsageGrouping.DirectoryStructure" />
+  <action id="Vcs.Log.ShowTooltip">
+    <mouse-shortcut keystroke="alt button2" />
+    <keyboard-shortcut first-keystroke="f2" />
+  </action>
   <action id="context.load" />
   <action id="context.save" />
+  <action id="copilot.cycleNextInlays">
+    <keyboard-shortcut first-keystroke="ctrl period" />
+  </action>
+  <action id="copilot.cyclePrevInlays" />
+  <action id="copilot.requestCompletions">
+    <keyboard-shortcut first-keystroke="ctrl comma" />
+  </action>
+  <action id="osmedile.intellij.stringmanip.PopupChoiceAction">
+    <keyboard-shortcut first-keystroke="alt m" />
+  </action>
 </keymap>
