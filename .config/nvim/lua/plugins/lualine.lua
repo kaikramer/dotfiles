@@ -18,12 +18,12 @@ return {
       },
       extensions = { 'lazy', 'fzf', 'mason', 'nerdtree', 'nvim-tree', 'quickfix', 'trouble' },
       sections = {
-        lualine_a = { { 'mode', fmt = function() return ' ' end, draw_empty = true, padding = 0  } },
+        lualine_a = { { 'mode', fmt = function(res) return res:sub(1,1) end } },
         lualine_b = { },
         lualine_c = { 'branch', 'diff', 'diagnostics', { 'filename', shorting_target = 40, path = 3 } }, -- show full path
-        lualine_x = { 'fileformat', 'encoding', 'filetype', 'location', 'progress' },
-        lualine_y = {  },
-        lualine_z = { { 'mode', fmt = function() return ' ' end, draw_empty = true, padding = 0 } }
+        lualine_x = { 'fileformat', 'encoding', 'filetype' },
+        lualine_y = { 'location'  },
+        lualine_z = { 'progress'  }
       },
       tabline = {
         -- lualine_a = {

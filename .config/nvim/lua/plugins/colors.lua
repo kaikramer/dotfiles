@@ -25,10 +25,10 @@ return {
                 base07 = '#c5c8e6',
                 base08 = '#61AFEF',
                 base09 = '#98C379',
-                base0A = '#E5C07B',
+                base0A = '#DCDFE4',
                 base0B = '#E5C07B',
                 base0C = '#C678DD',
-                base0D = '#6897BB',
+                base0D = '#DCDFE4',
                 base0E = '#98C379',
                 base0F = '#DCDFE4',
             })

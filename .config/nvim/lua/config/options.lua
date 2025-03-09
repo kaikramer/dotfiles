@@ -13,7 +13,7 @@ vim.o.hidden = true                     -- keep files open without showing them
 vim.o.backup = false                    -- some LSP servers have issues with backup files
 vim.o.writebackup = false               -- some LSP servers have issues with backup files
 vim.o.cmdheight = 1                     -- better display for messages
-vim.o.updatetime = 300                  -- you will have bad experience for diagnostic messages when it's default 4000
+vim.o.updatetime = 250                  -- you will have bad experience for diagnostic messages when it's default 4000
 vim.o.signcolumn = 'yes'                -- always show signcolumns
 vim.o.autoindent = true                 -- add indentation from current line for next line
 vim.o.cindent = true                    -- indent lines after {, before } and after cinwords
@@ -23,6 +23,21 @@ vim.o.swapfile = false                  -- disable swap files
 -- vim.o.showtabline = 2                   -- always show tabline
 vim.o.mouse = 'a'                       -- allow mouse for all modes
 vim.o.conceallevel = 0                  -- disable conceal feature (enabled by plugin indentLine)
+vim.o.timeoutlen = 300                  -- decrease wait time for a mapped sequence
+
+-- this reduces startup time but requires xsel
+vim.g.clipboard = {
+ name = "xsel",
+ copy = {
+  ["+"] = "xsel --nodetach -i -b",
+  ["*"] = "xsel --nodetach -i -p",
+ },
+ paste = {
+  ["+"] = "xsel  -o -b",
+  ["*"] = "xsel  -o -b",
+ },
+ cache_enabled = 1,
+}
 vim.o.clipboard = "unnamedplus"
 
 -- enhanced command-line completion

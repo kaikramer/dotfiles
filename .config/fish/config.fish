@@ -50,7 +50,7 @@ if status is-interactive
     #set -gx FZF_DEFAULT_COMMAND 'rg --files --hidden --glob "!.git/*"'
     set -gx FZF_DEFAULT_COMMAND 'fd --type file --strip-cwd-prefix --no-ignore --hidden --exclude .git'
     set -gx FZF_CTRL_T_COMMAND  "$FZF_DEFAULT_COMMAND"
-    set -gx FZF_DEFAULT_OPTS    "--height=80% --layout=reverse " # do not use --ansi it makes fzf slow
+    set -gx FZF_DEFAULT_OPTS    "--style=full --prompt='󰁕 ' --pointer='▌' --color=bg+:#444444,gutter:-1,pointer:blue,prompt:green --border --layout=reverse " # do not use --ansi it makes fzf slow
     #set -gx FZF_CTRL_R_OPTS     "--preview "
     # using original fzf fish functions file but renamed to "fzf-history-widget.fish" and with outer function and key bindings removed
     # bind \cr fzf-history-widget
@@ -98,6 +98,33 @@ if status is-interactive
                     cd $result
             end
         end
+    end
+
+    function mc
+        set MC_USER (whoami)
+        set MC_PWD_FILE (mktemp -u -t mc-$MC_USER.pwd.XXXXX)
+        /usr/bin/mc -P "$MC_PWD_FILE" $argv
+
+        if test -r "$MC_PWD_FILE"
+            set MC_PWD (cat "$MC_PWD_FILE")
+            if test -n "$MC_PWD" -a "$MC_PWD" != "$PWD" -a -d "$MC_PWD"
+                cd "$MC_PWD"
+            end
+            set -e MC_PWD
+        end
+
+        rm -f "$MC_PWD_FILE"
+        set -e MC_PWD_FILE
+        set -e MC_USER
+    end
+
+    function y
+        set tmp (mktemp -t "yazi-cwd.XXXXXX")
+        yazi $argv --cwd-file="$tmp"
+        if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+            builtin cd -- "$cwd"
+        end
+        rm -f -- "$tmp"
     end
 
     if test -e ~/.work.fish; source ~/.work.fish; end
