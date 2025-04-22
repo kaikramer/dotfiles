@@ -60,11 +60,11 @@ search_mode = "fulltext"
 
 ## which style to use
 ## possible values: auto, full, compact
-# style = "auto"
+style = "full"
 
 ## the maximum number of lines the interface should take up
 ## set it to 0 to always go full screen
-# inline_height = 0
+inline_height = 0
 
 ## Invert the UI - put the search bar at the top , Default to `false`
 # invert = false
@@ -115,7 +115,7 @@ search_mode = "fulltext"
 ## Configure the maximum height of the preview to show.
 ## Useful when you have long scripts in your history that you want to distinguish
 ## by more than the first few lines.
-max_preview_height = 20
+max_preview_height = 30
 
 ## Configure whether or not to show the help row, which includes the current Atuin
 ## version (and whether an update is available), a keymap hint, and the total
@@ -187,12 +187,10 @@ enter_accept = true
 ## Set commands that should be totally stripped and ignored from stats
 # common_prefix = ["sudo"]
 
-## Set commands that will be completely ignored from stats
-# ignored_commands = [
-#   "cd",
-#   "ls",
-#   "vi"
-# ]
+# ## Set commands that will be completely ignored from stats
+ignored_commands = [
+  "la"
+]
 
 [keys]
 # Defaults to true. If disabled, using the up/down key won't exit the TUI when scrolled past the first/last entry.

@@ -51,9 +51,7 @@ if status is-interactive
     set -gx FZF_DEFAULT_COMMAND 'fd --type file --strip-cwd-prefix --no-ignore --hidden --exclude .git'
     set -gx FZF_CTRL_T_COMMAND  "$FZF_DEFAULT_COMMAND"
     set -gx FZF_DEFAULT_OPTS    "--style=full --prompt='󰁕 ' --pointer='▌' --color=bg+:#444444,gutter:-1,pointer:blue,prompt:green --border --layout=reverse " # do not use --ansi it makes fzf slow
-    #set -gx FZF_CTRL_R_OPTS     "--preview "
     # using original fzf fish functions file but renamed to "fzf-history-widget.fish" and with outer function and key bindings removed
-    # bind \cr fzf-history-widget
     # fzf-file-widget is only available after fzf-history-widget was executed/autoloaded
     bind \ct fzf-file-widget
 
