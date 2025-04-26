@@ -291,7 +291,7 @@ return {
                 }
             })
 
-            vim.keymap.set('n', '<leader>e', ":Neotree action=focus source=filesystem reveal=true position=left toggle<CR>", { noremap = true })
+            vim.keymap.set('n', '<leader>e', ":Neotree action=focus source=filesystem reveal=true position=left toggle<CR>", { noremap = true, desc = "Toggle Neotree" })
         end
     }
 }

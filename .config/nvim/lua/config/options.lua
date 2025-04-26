@@ -40,6 +40,8 @@ vim.g.clipboard = {
 }
 vim.o.clipboard = "unnamedplus"
 
+-- vim.cmd[[colorscheme tokyonight-storm]]
+
 -- enhanced command-line completion
 vim.o.wildmenu = true
 vim.o.wildmode = "longest:full,full"    -- first tab will complete to longest string and show the the match list, second tab will complete to first full match
@@ -103,5 +105,4 @@ vim.cmd([[autocmd mygroup Filetype markdown setlocal tabstop=2 softtabstop=2 shi
 
 -- when file is not readable or writable, automatically use suda
 vim.cmd([[ let g:suda_smart_edit = 1 ]])
-
 

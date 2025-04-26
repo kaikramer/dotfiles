@@ -84,20 +84,6 @@ if status is-interactive
         git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
     end
 
-    function fcd
-        while true
-            set result $(fd --max-depth 1 --type d --hidden | fzf --bind "right:accept" --bind "left:become(echo '..')" --bind "q:abort")
-            switch "$result"
-                case ""
-                    return 0
-                case ".."
-                    cd ..
-                case '*'
-                    cd $result
-            end
-        end
-    end
-
     function mc
         set MC_USER (whoami)
         set MC_PWD_FILE (mktemp -u -t mc-$MC_USER.pwd.XXXXX)
@@ -114,15 +100,6 @@ if status is-interactive
         rm -f "$MC_PWD_FILE"
         set -e MC_PWD_FILE
         set -e MC_USER
-    end
-
-    function y
-        set tmp (mktemp -t "yazi-cwd.XXXXXX")
-        yazi $argv --cwd-file="$tmp"
-        if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-            builtin cd -- "$cwd"
-        end
-        rm -f -- "$tmp"
     end
 
     if test -e ~/.work.fish; source ~/.work.fish; end
