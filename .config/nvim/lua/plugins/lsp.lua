@@ -9,31 +9,75 @@ return {
                 tag = "legacy",
                 event = "LspAttach",
             },
-            "folke/neodev.nvim",
-            "hrsh7th/cmp-nvim-lsp",
-        },
-        config = function()
-            -- Set up Mason before anything else
-            require("mason").setup()
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "lua_ls",
-                    "html",
+            {
+                "folke/lazydev.nvim",
+                ft = "lua", -- only load on lua files
+                opts = {
+                    library = {
+                        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                    },
                 },
-                automatic_installation = true,
-            })
-            require("mason-lspconfig").setup_handlers {
-                function (server_name) -- default handler (optional)
-                    require("lspconfig")[server_name].setup {}
-                end,
-                -- Next, you can provide a dedicated handler for specific servers.
-                -- For example, a handler override for the `rust_analyzer`:
-                -- ["rust_analyzer"] = function ()
-                --    require("rust-tools").setup {}
-                --end
+            },
+            {
+                'saghen/blink.cmp',
+
+                -- use a release tag to download pre-built binaries
+                version = '1.*',
+
+                ---@module 'blink.cmp'
+                ---@type blink.cmp.Config
+                opts = {
+                    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+                    -- 'super-tab' for mappings similar to vscode (tab to accept)
+                    -- 'enter' for enter to accept
+                    -- 'none' for no mappings
+                    --
+                    -- All presets have the following mappings:
+                    -- C-space: Open menu or open docs if already open
+                    -- C-n/C-p or Up/Down: Select next/previous item
+                    -- C-e: Hide menu
+                    -- C-k: Toggle signature help (if signature.enabled = true)
+                    --
+                    -- See :h blink-cmp-config-keymap for defining your own keymap
+                    keymap = { preset = 'enter' },
+
+                    completion = {
+                        -- Disable auto brackets
+                        -- NOTE: some LSPs may add auto brackets themselves anyway
+                        accept = { auto_brackets = { enabled = false }, },
+
+                        -- Don't select by default, auto insert on selection
+                        list = { selection = { preselect = false, auto_insert = false } },
+
+                        documentation = { auto_show = true, auto_show_delay_ms = 0, },
+                    },
+
+                    -- Default list of enabled providers defined so that you can extend it
+                    -- elsewhere in your config, without redefining it, due to `opts_extend`
+                    sources = {
+                        default = { 'lazydev', 'lsp', 'path', 'buffer' },
+                        providers = {
+                            lazydev = {
+                                name = "LazyDev",
+                                module = "lazydev.integrations.blink",
+                                -- make lazydev completions top priority (see `:h blink.cmp`)
+                                score_offset = 100,
+                            },
+                        },
+                    },
+
+                    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+                    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+                    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+                    fuzzy = { implementation = "prefer_rust_with_warning" }
+                },
+                opts_extend = { "sources.default" }
             }
 
-            require("neodev").setup()
+        },
+        config = function()
+            require("mason").setup()
+            require("mason-lspconfig").setup()
 
             -- Turn on lsp status information
             require('fidget').setup()
@@ -67,43 +111,6 @@ return {
             }
             vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix list' })
             vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show floating window with diagnostic messages' })
-
-            -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-            local capabilities = vim.lsp.protocol.make_client_capabilities()
-            capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
-            local lspconfig = require('lspconfig')
-            lspconfig.lua_ls.setup({
-                capabilities = capabilities,
-                settings = {
-                    Lua = {
-                        completion = {
-                            callSnippet = "Replace",
-                        },
-                        diagnostics = {
-                            globals = { "vim" },
-                        },
-                        workspace = {
-                            library = {
-                                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                                [vim.fn.stdpath("config") .. "/lua"] = true,
-                            },
-                        },
-                    },
-                },
-            })
-            lspconfig.html.setup({
-                capabilities = capabilities,
-            })
-
-            vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-                vim.lsp.handlers.hover,
-                { border = 'rounded' }
-            )
-            vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-                vim.lsp.handlers.signature_help,
-                { border = 'rounded' }
-            )
 
             vim.keymap.set('n', '<leader>M', ":Mason<CR>", { noremap = true })
 
